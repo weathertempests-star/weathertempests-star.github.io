@@ -2,6 +2,8 @@
 title: Resume
 ---
 
+[Resume](/quartz/static/CV.pdf)
+
 <iframe src="/CV.pdf" width="100%" height="600px"></iframe>
 
 # Education
