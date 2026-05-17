@@ -2,9 +2,13 @@
 title: Resume
 ---
 
+<iframe src="/CV.pdf" width="100%" height="600px"></iframe>
+
 # Education
 
-NYCU CS Graduate Student
+NYCU CS Graduateed Student
+Now in NTU NetDB
+
 
 # Skills
 
