@@ -9,4 +9,4 @@ title: Home
 ## Sections
 
 - [[resume]]
-- [[Blog]]
+- [[Blog/]]
