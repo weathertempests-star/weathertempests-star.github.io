@@ -4,11 +4,15 @@ tags:
   - Deep-Learning
   - note
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-05-27
 authors: WeiTa
 status: active
 ---
 ---
+
+> 本文說明感知機的限制、為何多層結構能解決 XOR，以及反向傳播與 loss 的直覺對應；
+> 結尾提供實務建議，適合想掌握 MLP 核心概念的讀者。
+
 ### 這篇文章想回答什麼問題？
 
 第二堂課開始正式進入神經網路。這一講真正想處理的問題，其實很清楚：
