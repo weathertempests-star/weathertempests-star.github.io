@@ -13,7 +13,7 @@ status: active
 # Transformer：Attention 如何重寫序列建模？
 
 > 這篇文章不只是介紹 Transformer 長什麼樣，而是在回答：為什麼序列建模不必再被左到右的遞迴限制綁住。
-> 從 attention 的動態查詢出發，本文把 Transformer 的數學、工程設計與 MaskGIT 的影像生成流程串成同一條線。
+> 從 attention 的動態查詢出發，本文把 Transformer 的數學、工程設計與 MaskGIT 的影像生成流程串在一起介紹。
 
 ## 這篇文章想回答什麼問題？
 
@@ -25,7 +25,8 @@ RNN 的邏輯是「先讀到 $t-1$ 步，才能算第 $t$ 步」，這很直覺�
 
 **不需要**。
 
-它把序列建模改寫成一個更泛用的問題：任意兩個 token 之間，根據內容動態決定彼此的關聯強度。這件事同時解決了 RNN 的速度限制，也讓 Transformer 幾乎成為現代深度學習的骨幹——從 BERT、GPT 到 ViT，再到現在這篇要延伸討論的 MaskGIT。
+它把序列建模改寫成一個更泛用的問題：任意兩個 token 之間，根據內容動態決定彼此的關聯強度。
+這件事同時解決了 RNN 的速度限制，也讓 Transformer 幾乎成為現代深度學習的骨幹——從 BERT、GPT 到 ViT，再到現在這篇要延伸討論的 MaskGIT。
 
 如果把這篇文章濃縮成三個問題：
 
@@ -72,7 +73,8 @@ CNN 的平行化沒有問題，但它的感受野天生是局部的。若想讓�
 - **Key**：「我身上有哪些可以被比對的特徵」
 - **Value**：「如果你真的要看我，可以拿走哪些內容」
 
-傳統 RNN 是把所有資訊壓進一個 hidden state，再靠 gate 決定要記住或忘記什麼。Attention 不一樣：它不預設哪個資訊重要，而是在每一次計算時，根據當前 query 和全部 key 的相似度，動態決定要把注意力放在誰身上。
+傳統 RNN 是把所有資訊壓進一個 hidden state，再靠 gate(*LSTM*) 決定要記住或忘記什麼。
+Attention 不一樣：它不預設哪個資訊重要，而是在每一次計算時，根據當前 query 和全部 key 的相似度，**動態決定**要把注意力放在誰身上。
 
 這件事帶來兩個根本改變：
 
@@ -94,7 +96,7 @@ $$
 Transformer 的標準流程可以拆成幾個清楚的階段：
 
 ```
-token → embedding → + positional encoding
+token → embedding → (+ positional encoding)
        ↓
   [Multi-Head Self-Attention]
        ↓
@@ -140,9 +142,10 @@ $$
 
 $pos$ 是位置索引，$i$ 是維度索引，$d$ 是 embedding 總維度。
 
-這個設計可以理解成：每個位置被編成一組「多頻率波形指紋」，高維度對應低頻（全局位置），低維度對應高頻（局部細節）。不同位置之間的差可以被模型學會解讀，這就是它能表示相對位置關係的原因。
+這個設計可以理解成：每個位置被編成一組「多頻率波形指紋」，高維度對應低頻（全局位置），低維度對應高頻（局部細節）。
+不同位置之間的差可以被模型學會解讀，這就是它能表示相對位置關係的原因。
 
-> **Note：** 近年的模型（如 RoPE、ALiBi）大多改用可學習或相對位置編碼，但原始正弦版本的直覺仍然值得理解。
+> **Note：** 近年的模型（如 RoPE、ALiBi）大多改用可學習或相對位置編碼
 
 ### Step 3：Query / Key / Value 投影
 
@@ -168,7 +171,8 @@ $$
 
 這個寫法也點出一件事：attention 的內容選擇（$K$）和內容載體（$V$）可以分開學，這比單一 hidden state 更有彈性。
 
-角色分工：$q_i$ 負責提問，$k_i$ 負責被比對，$v_i$ 負責提供實際內容。投影矩陣是可以訓練的，代表模型可以自己學到「什麼樣的問題配什麼樣的答案」。
+角色分工：$q_i$ 負責提問，$k_i$ 負責被比對，$v_i$ 負責提供實際內容。
+投影矩陣是可以訓練的，代表模型可以自己學到「什麼樣的問題配什麼樣的答案」。
 
 ### Step 4：Scaled Dot-Product Attention
 
@@ -229,7 +233,8 @@ $QK^T \in \mathbb{R}^{N \times N}$ 這個矩陣每一格都是「第 $i$ 個 tok
 
 ## 多頭注意力（Multi-Head Attention）
 
-單一 attention head 只能學到一種關係視角。但語言或影像裡的關係是多層次的：主詞動詞對應、指代詞回指、局部紋理依存……
+單一 attention head 只能學到一種關係視角。
+但語言或影像裡的關係是多層次的：主詞動詞對應、指代詞回指、局部紋理依存……
 
 Multi-head 的做法是讓模型同時跑 $h$ 個 head，每個 head 有自己獨立的投影矩陣：
 
@@ -375,7 +380,8 @@ $$
 
 ## Vision Transformer（ViT）：把影像也變成序列
 
-Transformer 的核心不依賴文字。只要把影像切成一塊一塊的 patch，每個 patch 就可以當成一個 token。
+Transformer 的核心不依賴文字。
+只要把影像切成一塊一塊的 patch，每個 patch 就可以當成一個 token。
 
 以 $224 \times 224 \times 3$ 的影像為例，切成 $16 \times 16$ 的 patch 後，會得到 $14 \times 14 = 196$ 個 patch。每個 patch 展平後做線性投影，加入一個可學習的 `[CLS]` token 和一維位置編碼，就能送進標準 Transformer Encoder。
 
@@ -389,7 +395,8 @@ $$
 
 ViT 說明了一件很重要的事：
 
-> Transformer 不是 NLP 專屬，而是一種通用的關係建模框架。只要資料能被切成 token 序列，Attention 就能讓它們彼此溝通。
+> Transformer 不是 *NLP*(Nature Language Process) 專屬，而是一種通用的關係建模框架。
+> 只要資料能被切成 token 序列，Attention 就能讓它們彼此溝通。
 
 ---
 
