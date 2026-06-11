@@ -1,11 +1,15 @@
 ---
+title: "ep 0: 深度學習系列"
 type: moc
 tags:
   - Deep-Learning
   - note
 created: 2026-05-24
 updated: 2026-05-28
+lastmod: 2026-06-01
 authors: WeiTa
+description: "修習深度學習課程而想要開啟系列的動機"
+draft: false
 ---
 
 # 深度學習：從課堂到理解的重建之旅
