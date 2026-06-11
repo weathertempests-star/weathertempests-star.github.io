@@ -92,19 +92,19 @@ Problem → Failure → Intuition → Formulation → Optimization → Engineeri
 
 我排序的順序不完全按造上課的順序，是我在做這系列文章的時候覺得比較連貫的學習順序
 
-1. [機器學習到底在學什麼？從硬幣、MLE 到 KL-divergence](一切的開始.md)
-2. [XOR 打敗了感知機，多層網路怎麼反擊？](線性模型被掰彎-Deep%20Feedforward%20Network.md)
-3. [影像憑什麼能被學懂？卷積、殘差與像素級預測](模型的眼睛，CNN.md)
-4. [神經網路怎麼讀句子？從 Hidden State 到 LSTM 的記憶設計](過去種種譬如昨日死；今日種種譬如RNN.md)
-5. [序列不必從左讀到右：Attention 如何重寫建模規則](Transformer不再是變形金剛.md)
-6. [PCA 加上機率能做什麼？通往 VAE 的第一座橋](生成模型前傳%20-%20Linear%20Factor%20Models%20與%20Probabilistic%20PCA.md)
-7. [壓縮不等於生成：VAE 如何讓 Latent Space 變得可採樣](生成模型第一部曲%20-%20從壓縮到生成.md)
-8. [從可逆映射到逐步去噪：Flow 與 Diffusion 的兩條路](生成模型第二部曲%20-%20Flow%20與%20Diffusion%20的兩條路.md)
-9. [GAN、WGAN 與 Diffusion：生成模型的距離之戰](生成模型第三部曲%20-從對抗到擴散.md)
-10. [沒有標籤怎麼學？MDP、Bellman 方程與決策的數學語言](強化學習四部曲之一，沒有標準答案的第一步.md)
-11. [從 Q-learning 到 DQN：用 Bellman Error 當學習信號](強化學習四部曲之二，Valued%20Based%20RL.md)
-12. [不學 Q 值，直接對策略求梯度：從 REINFORCE 到 PPO](強化學習四部曲之三，Policy%20based%20RL.md)
-13. [先學世界怎麼運作，再決定怎麼行動：World Model 與規劃](強化學習四部曲之四，Model%20based%20RL.md)
+1. [[ep 1 一切的開始|機器學習到底在學什麼？]]
+2. [[ep 2 線性模型被掰彎-Deep Feedforward Network| 深度學習的第一個寒冬]]
+3. [[ep 3 模型的眼睛，CNN|模型辨認圖像的方法]]
+4. [[ep 4 過去種種譬如昨日死；今日種種譬如RNN|神經網路怎麼讀句子？從 Hidden State 到 LSTM 的記憶設計]]
+5. [[ep 5 Transformer不再是變形金剛|Attenation is all who need]]
+6. [[ep 6 生成模型前傳 - Linear Factor Models 與 Probabilistic PCA|生成是一件很複雜的事情]]
+7. [[ep 7 生成模型第一部曲 - 從壓縮到生成|壓縮不等於生成]]
+8. [[ep 8 生成模型第三部曲 -從對抗到擴散|Diffusion]]
+9. [[ep 9 生成模型第二部曲 - Flow 與 Diffusion 的兩條路|Gan是訓練模型的時候發出的感嘆]]
+10. [[ep 10 強化學習四部曲之一，沒有標準答案的第一步]]
+11. [[ep 11 強化學習四部曲之二，Valued Based RL]]
+12. [[ep 12 強化學習四部曲之三，Policy based RL]]
+13. [[ep 13 強化學習四部曲之四，Model based RL]]
 
 ---
 
