@@ -2,9 +2,9 @@
 title: Resume
 ---
 
-[Resume](/CV.pdf)
+[Resume](/content/cv/resume.md)
 
-<iframe src="/files/CV.pdf" width="100%" height="900px"></iframe>
+<iframe src="/content/cv/CV.pdf" width="100%" height="900px"></iframe>
 
 # Education
 
