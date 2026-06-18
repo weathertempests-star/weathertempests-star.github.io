@@ -4,7 +4,7 @@ title: Resume
 
 [Resume](/CV.pdf)
 
-<iframe src="/CV.pdf" width="100%" height="600px"></iframe>
+<iframe src="/files/CV.pdf" width="100%" height="900px"></iframe>
 
 # Education
 
@@ -17,12 +17,10 @@ Now in NTU NetDB
 - C++
 - Linux
 - Docker
-- Kubernetes
 - Security
 - ML Systems
 
 # Research Interests
 
 - SLM
-- Security
-- Systems
+- Computer Security

@@ -1,8 +1,8 @@
 ---
 type: moc
 tags:
-  - Memba
   - Language-Model
+  - Mamba
 status: active
 created: 2026-05-13
 updated: 2026-05-15
