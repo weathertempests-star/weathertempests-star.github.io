@@ -1,0 +1,239 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import EntryCard from '../components/EntryCard.astro';
+import { profile } from '../data/profile';
+import { published, entryUrl, formatDate } from '../lib/content';
+const [blog, notes] = await Promise.all([published('blog'), published('notes')]);
+const all = [...blog, ...notes].sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const featured = all.filter((entry) => entry.data.featured).slice(0, 2);
+---
+
+<Base>
+  <div class="container">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="eyebrow">
+          <span class="tiny-line"></span> A PERSONAL SPACE FOR IDEAS
+        </div>
+        <p class="hero-intro">
+          你好，我是 <span>{profile.name}</span> <span aria-hidden="true">↗</span>
+        </p>
+        <h1 id="hero-title">
+          把好奇，
+          <br />
+          寫成下一個
+          <span class="hero-emphasis">
+            發現<span class="ink-line" aria-hidden="true"></span>
+          </span>
+          。
+        </h1>
+        <p class="hero-description">
+          記錄學習的軌跡，整理研究的思考。
+          <br />
+          在文字與探索之間，讓每一個想法慢慢成形。
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="/blog/">
+            開始閱讀 <Icon name="arrow" size={18} />
+          </a>
+          <a class="button quiet" href="/cv/">
+            認識我 <Icon name="external" size={16} />
+          </a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="map-top">
+          <span>THE THINKING PROCESS</span>
+          <span>FIG. 001</span>
+        </div>
+        <svg class="knowledge-map" viewBox="0 0 450 350" fill="none">
+          <defs>
+            <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="1" cy="1" r="1" fill="#bac9e1" />
+            </pattern>
+          </defs>
+          <rect width="450" height="350" fill="url(#dots)" />
+          <circle cx="225" cy="175" r="126" stroke="#c7d4e9" stroke-dasharray="4 7" />
+          <ellipse
+            cx="225"
+            cy="175"
+            rx="186"
+            ry="65"
+            transform="rotate(-32 225 175)"
+            stroke="#c7d4e9"
+          />
+          <path
+            d="M118 104 225 175 345 118M225 175l61 115M225 175l-124 87"
+            stroke="#648bd8"
+            stroke-width="1.5"
+          />
+          <circle cx="225" cy="175" r="61" fill="#2458d3" />
+          <circle cx="225" cy="175" r="73" stroke="#2458d3" stroke-opacity=".18" />
+          <text x="225" y="168" text-anchor="middle" fill="white" font-size="24" font-weight="600">
+            好奇心
+          </text>
+          <text
+            x="225"
+            y="193"
+            text-anchor="middle"
+            fill="#d6e3ff"
+            font-size="10"
+            letter-spacing="3"
+          >
+            CURIOSITY
+          </text>
+          <rect x="65" y="68" width="112" height="58" rx="10" fill="white" stroke="#d6dfed" />
+          <text x="121" y="92" text-anchor="middle" fill="#244374" font-size="15">
+            閱讀與思考
+          </text>
+          <text
+            x="121"
+            y="111"
+            text-anchor="middle"
+            fill="#65738a"
+            font-size="9"
+            letter-spacing="1.5"
+          >
+            READ &amp; REFLECT
+          </text>
+          <rect x="294" y="85" width="110" height="58" rx="10" fill="white" stroke="#d6dfed" />
+          <text x="349" y="109" text-anchor="middle" fill="#244374" font-size="15">
+            探索與研究
+          </text>
+          <text
+            x="349"
+            y="128"
+            text-anchor="middle"
+            fill="#65738a"
+            font-size="9"
+            letter-spacing="1.5"
+          >
+            EXPLORE &amp; LEARN
+          </text>
+          <rect x="231" y="266" width="111" height="58" rx="10" fill="white" stroke="#d6dfed" />
+          <text x="286" y="290" text-anchor="middle" fill="#244374" font-size="15">
+            記錄與分享
+          </text>
+          <text
+            x="286"
+            y="309"
+            text-anchor="middle"
+            fill="#65738a"
+            font-size="9"
+            letter-spacing="1.5"
+          >
+            WRITE &amp; SHARE
+          </text>
+          <circle cx="102" cy="261" r="7" fill="#2458d3" />
+          <circle cx="352" cy="204" r="4" fill="#a3b9de" />
+          <circle cx="248" cy="51" r="4" fill="#a3b9de" />
+          <path d="M43 195h12m-6-6v12M373 264h12m-6-6v12" stroke="#8fa6ca" />
+        </svg>
+        <div class="map-bottom">
+          <span class="map-status">
+            <i></i> ALWAYS A WORK IN PROGRESS
+          </span>
+          <span>∞</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="explore-strip" aria-label="探索網站">
+      <a href="/blog/">
+        <span class="explore-icon">
+          <Icon name="book" />
+        </span>
+        <span>
+          <strong>文字與日常</strong>
+          <small>學習紀錄、觀點與生活裡的靈感</small>
+        </span>
+        <Icon name="arrow" size={18} />
+      </a>
+      <a href="/notes/">
+        <span class="explore-icon">
+          <Icon name="flask" />
+        </span>
+        <span>
+          <strong>研究與探索</strong>
+          <small>論文閱讀、問題拆解與實驗筆記</small>
+        </span>
+        <Icon name="arrow" size={18} />
+      </a>
+      <a href="/cv/">
+        <span class="explore-icon">
+          <Icon name="file" />
+        </span>
+        <span>
+          <strong>關於與履歷</strong>
+          <small>背景、經歷與正在前進的方向</small>
+        </span>
+        <Icon name="arrow" size={18} />
+      </a>
+    </section>
+
+    <section class="section-block" aria-labelledby="featured-title">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">SELECTED ENTRIES</div>
+          <h2 id="featured-title">
+            從這裡開始閱讀<span class="blue">.</span>
+          </h2>
+        </div>
+        <a class="text-link" href="/blog/">
+          所有文章 <Icon name="arrow" size={17} />
+        </a>
+      </div>
+      {featured.length ? (
+        <div class="featured-grid">
+          {featured.map((entry) => (
+            <EntryCard entry={entry} visual />
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">精選內容準備中。先到部落格或研究筆記看看吧。</div>
+      )}
+    </section>
+
+    <div class="home-bottom">
+      <section aria-labelledby="recent-title">
+        <div class="section-heading compact">
+          <div>
+            <div class="eyebrow">THE LATEST</div>
+            <h2 id="recent-title">最近的記錄</h2>
+          </div>
+          <span class="muted small">一步一步，持續累積</span>
+        </div>
+        <div class="recent-list">
+          {all.slice(0, 4).map((entry) => (
+            <a class="recent-entry" href={entryUrl(entry)}>
+              <time datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time>
+              <div>
+                <span class="recent-kind">
+                  {entry.collection === 'notes' ? '研究筆記' : '部落格'}
+                  {entry.data.sample ? ' · 示範內容' : ''}
+                </span>
+                <h3>{entry.data.title}</h3>
+              </div>
+              <Icon name="arrow" size={18} />
+            </a>
+          ))}
+          {all.length === 0 && <p class="empty-state">第一篇記錄正在醞釀中。</p>}
+        </div>
+      </section>
+      <aside class="about-card">
+        <span class="eyebrow">BEHIND THE NOTES</span>
+        <h2>關於這個小角落</h2>
+        <p>這裡是一份持續更新的思考紀錄。收藏值得追問的問題，也留下還沒完成的答案。</p>
+        <div class="about-rule"></div>
+        <span class="small muted">研究領域</span>
+        <p class="interest-text">
+          {profile.interests.length ? profile.interests.join(' / ') : '待填：正在探索的研究方向'}
+        </p>
+        <a class="text-link" href="/cv/">
+          更多關於我 <Icon name="arrow" size={17} />
+        </a>
+      </aside>
+    </div>
+  </div>
+</Base>

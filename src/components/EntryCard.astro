@@ -1,0 +1,66 @@
+---
+import type { Entry } from '../lib/content';
+import { entryUrl, formatDate, readingTime } from '../lib/content';
+import Icon from './Icon.astro';
+interface Props {
+  entry: Entry;
+  visual?: boolean;
+}
+const { entry, visual = false } = Astro.props;
+const note = entry.collection === 'notes';
+---
+
+<article
+  class:list={['entry-card', { 'with-visual': visual }]}
+  data-entry-tags={JSON.stringify(entry.data.tags)}
+>
+  {visual && (
+    <div class:list={['card-art', note ? 'art-note' : 'art-blog']} aria-hidden="true">
+      {note ? (
+        <>
+          <div class="art-axis"></div>
+          <div class="art-curve"></div>
+          <span class="art-equation">θ ← θ − α∇J(θ)</span>
+          <span class="art-index">RESEARCH / 01</span>
+        </>
+      ) : (
+        <>
+          <div class="art-paper">
+            <span></span>
+            <span></span>
+            <span></span>
+            <b>
+              把想法
+              <br />
+              留在紙上。
+            </b>
+          </div>
+          <span class="art-index">JOURNAL / 01</span>
+        </>
+      )}
+    </div>
+  )}
+  <div class="entry-card-body">
+    <div class="entry-meta">
+      <span class:list={['category', { 'category-note': note }]}>
+        {note ? '研究筆記' : '部落格'}
+      </span>
+      {entry.data.sample && <span class="sample-label">示範內容</span>}
+      <time datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time>
+    </div>
+    <h3>
+      <a href={entryUrl(entry)}>{entry.data.title}</a>
+    </h3>
+    <p>{entry.data.description}</p>
+    <div class="entry-card-bottom">
+      <div class="tags">
+        {entry.data.tags.slice(0, 3).map((tag) => (
+          <span>{tag}</span>
+        ))}
+      </div>
+      <span class="read-time">
+        {readingTime(entry.body)} 分鐘 <Icon name="arrow" size={17} />
+      </span>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,86 @@
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm;
+  }
+  html,
+  body {
+    background: white !important;
+    color: #111 !important;
+    font-size: 11pt;
+  }
+  .site-header,
+  .site-footer,
+  .skip-link,
+  #print-cv,
+  .profile-avatar,
+  .profile-card > .text-link,
+  .cv-heading > div > p {
+    display: none !important;
+  }
+  .container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .cv-heading {
+    margin-bottom: 20px !important;
+  }
+  .cv-heading h1 {
+    font-size: 24pt !important;
+  }
+  .cv-grid {
+    display: block !important;
+  }
+  .profile-card {
+    padding: 0 0 15px !important;
+    border: 0 !important;
+    border-bottom: 1px solid #ccc !important;
+    margin-bottom: 20px !important;
+  }
+  .profile-divider {
+    display: none !important;
+  }
+  .profile-contact {
+    border: 0 !important;
+    margin-top: 8px !important;
+    padding: 0 !important;
+  }
+  .profile-card .eyebrow {
+    margin-top: 12px !important;
+    display: block !important;
+  }
+  .profile-card h2 {
+    font-size: 20pt !important;
+  }
+  .cv-section {
+    padding-bottom: 14px !important;
+    margin-bottom: 18px !important;
+    break-inside: avoid;
+  }
+  .cv-section h2 {
+    font-size: 16pt !important;
+    margin: 5px 0 12px !important;
+  }
+  .timeline-entry {
+    break-inside: avoid;
+  }
+  .placeholder-block {
+    padding: 8px !important;
+    background: none !important;
+    border: 1px dashed #ccc !important;
+  }
+  .cv-page a[href^='http']:after {
+    content: ' (' attr(href) ')';
+    font-size: 9pt;
+    overflow-wrap: anywhere;
+  }
+  .cv-page a {
+    color: inherit !important;
+  }
+  .tags span {
+    background: none !important;
+    color: inherit !important;
+  }
+}

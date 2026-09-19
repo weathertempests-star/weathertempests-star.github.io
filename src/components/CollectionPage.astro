@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import EntryCard from './EntryCard.astro';
+import type { Collection } from '../lib/content';
+import { published } from '../lib/content';
+interface Props {
+  collection: Collection;
+}
+const { collection } = Astro.props;
+const entries = await published(collection);
+const tags = [...new Set(entries.flatMap((entry) => entry.data.tags))].sort((a, b) =>
+  a.localeCompare(b, 'zh-Hant'),
+);
+const note = collection === 'notes';
+const title = note ? '研究筆記' : '部落格';
+const description = note
+  ? '把複雜的問題拆開，把零散的理解連起來。記錄閱讀、推導與探索的過程。'
+  : '學到的事、讀過的文字，以及日常裡值得留下的想法。';
+---
+
+<Base title={title} description={description}>
+  <div class="container page-container">
+    <header class="page-heading">
+      <div class="eyebrow">{note ? 'RESEARCH & EXPLORATION' : 'THOUGHTS & STORIES'}</div>
+      <h1>
+        {title}
+        <span class="blue">.</span>
+      </h1>
+      <p>{description}</p>
+    </header>
+    <div class="collection-toolbar">
+      <div class="tag-filters" role="group" aria-label="依標籤篩選" hidden>
+        <button type="button" class="tag-filter" data-tag="" aria-pressed="true">
+          全部
+        </button>
+        {tags.map((tag) => (
+          <button type="button" class="tag-filter" data-tag={tag} aria-pressed="false">
+            {tag}
+          </button>
+        ))}
+      </div>
+      <p class="entry-count" aria-live="polite">
+        共 <span id="result-count">{entries.length}</span> 篇{note ? '筆記' : '文章'}
+      </p>
+    </div>
+    <div class="collection-grid">
+      {entries.map((entry) => (
+        <EntryCard entry={entry} />
+      ))}
+    </div>
+    <p class="empty-state" id="collection-empty" hidden={entries.length > 0}>
+      尚未有符合條件的內容，試試其他標籤。
+    </p>
+  </div>
+</Base>
+<script>
+  const filters = document.querySelector<HTMLElement>('.tag-filters');
+  if (filters) {
+    filters.hidden = false;
+    const buttons = [...filters.querySelectorAll<HTMLButtonElement>('[data-tag]')];
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-entry-tags]')];
+    const validTags = new Set(buttons.map((button) => button.dataset.tag || ''));
+    function applyTag(tag: string) {
+      let count = 0;
+      for (const card of cards) {
+        const tags = JSON.parse(card.dataset.entryTags || '[]') as string[];
+        card.hidden = Boolean(tag) && !tags.includes(tag);
+        if (!card.hidden) count++;
+      }
+      buttons.forEach((button) =>
+        button.setAttribute('aria-pressed', String(button.dataset.tag === tag)),
+      );
+      document.querySelector('#result-count')!.textContent = String(count);
+      (document.querySelector('#collection-empty') as HTMLElement).hidden = count !== 0;
+    }
+    function fromUrl() {
+      const requested = new URL(location.href).searchParams.get('tag') || '';
+      applyTag(validTags.has(requested) ? requested : '');
+    }
+    buttons.forEach((button) =>
+      button.addEventListener('click', () => {
+        const tag = button.dataset.tag || '';
+        const url = new URL(location.href);
+        if (tag) url.searchParams.set('tag', tag);
+        else url.searchParams.delete('tag');
+        history.pushState({}, '', url);
+        applyTag(tag);
+      }),
+    );
+    window.addEventListener('popstate', fromUrl);
+    fromUrl();
+  }
+</script>

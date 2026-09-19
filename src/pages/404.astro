@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Base title="找不到頁面" noindex>
+  <div class="container not-found">
+    <div class="eyebrow">A SMALL DETOUR</div>
+    <div class="error-number" aria-hidden="true">
+      404<span>.</span>
+    </div>
+    <h1>這一頁，還沒寫到。</h1>
+    <p>
+      可能是連結已變更，或這篇內容尚未公開。
+      <br />
+      回到首頁，找一個新的閱讀起點吧。
+    </p>
+    <div class="hero-actions">
+      <a href="/" class="button primary">
+        回到首頁 <Icon name="arrow" size={18} />
+      </a>
+      <a href="/search/" class="button secondary">
+        搜尋文章
+      </a>
+    </div>
+  </div>
+</Base>

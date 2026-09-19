@@ -1,0 +1,31 @@
+---
+interface Props {
+  name: 'arrow' | 'search' | 'book' | 'flask' | 'file' | 'external' | 'rss' | 'print';
+  size?: number;
+}
+const { name, size = 20 } = Astro.props;
+const paths = {
+  arrow: 'M5 12h14m-6-6 6 6-6 6',
+  search: 'm21 21-5-5M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0',
+  book: 'M12 5v16M12 5C8 2 4 3 2 4v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-2-1-6-2-10 1Z',
+  flask: 'M9 3h6M10 3v7l-6 9c-1 1 0 2 1 2h14c1 0 2-1 1-2l-6-9V3M7 15h10',
+  file: 'M14 2H5v20h14V7l-5-5Zm0 0v6h5M8 12h8M8 16h6',
+  external: 'M14 3h7v7m0-7L10 14M10 3H3v18h18v-7',
+  rss: 'M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16M5 19h.01',
+  print: 'M7 8V3h10v5M7 17H3V8h18v9h-4M7 14h10v7H7Z',
+};
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <path d={paths[name]} />
+</svg>

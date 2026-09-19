@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320" fill="none">
+  <rect width="800" height="320" rx="16" fill="#eef3fb" />
+  <path
+    d="M220 160h120m-12-8 12 8-12 8m132-8h120m-12-8 12 8-12 8"
+    stroke="#7899d4"
+    stroke-width="2"
+  />
+  <g fill="white" stroke="#cedbed">
+    <rect x="60" y="80" width="170" height="160" rx="12" />
+    <rect x="315" y="80" width="170" height="160" rx="12" />
+    <rect x="570" y="80" width="170" height="160" rx="12" />
+  </g>
+  <g fill="#2458d3" font-family="system-ui,sans-serif" font-size="24" text-anchor="middle">
+    <text x="145" y="155">Observe</text>
+    <text x="400" y="155">Question</text>
+    <text x="655" y="155">Connect</text>
+  </g>
+  <g fill="#6c7e99" font-family="monospace" font-size="12" text-anchor="middle" letter-spacing="2">
+    <text x="145" y="188">01</text>
+    <text x="400" y="188">02</text>
+    <text x="655" y="188">03</text>
+  </g>
+  <g fill="#88a6d9">
+    <circle cx="145" cy="112" r="4" />
+    <circle cx="400" cy="112" r="4" />
+    <circle cx="655" cy="112" r="4" />
+  </g>
+</svg>
