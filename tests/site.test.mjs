@@ -39,7 +39,9 @@ test('static output contains required pages and search assets', () => {
   for (const path of [
     'index.html',
     'blog/index.html',
+    'blog/learning-in-public/index.html',
     'notes/index.html',
+    'notes/gradient-descent/index.html',
     'cv/index.html',
     'search/index.html',
     '404.html',
@@ -51,10 +53,58 @@ test('static output contains required pages and search assets', () => {
   if (
     files(root)
       .filter((path) => path.endsWith('.html'))
-      .some((path) => readFileSync(path, 'utf8').includes('<article data-pagefind-body'))
+      .some((path) => /<article\b[^>]*\bdata-pagefind-body[\s=>]/.test(readFileSync(path, 'utf8')))
   ) {
     assert.ok(existsSync(join(root, 'pagefind/pagefind.js')));
   }
+});
+
+test('RSS and sitemap include published articles and preserve the public origin', () => {
+  const htmlFiles = files(root).filter((path) => path.endsWith('.html'));
+  const articleUrls = htmlFiles.flatMap((path) => {
+    const html = readFileSync(path, 'utf8');
+    if (!/<article\b[^>]*\bdata-pagefind-body[\s=>]/.test(html)) return [];
+    const canonical = html.match(/rel="canonical" href="([^"]+)"/)?.[1];
+    assert.ok(canonical, `Missing article canonical: ${path}`);
+    return [canonical];
+  });
+  assert.ok(articleUrls.length > 0, 'The site must contain published articles');
+
+  const rss = readFileSync(join(root, 'rss.xml'), 'utf8');
+  const channel = rss.split('<item>')[0];
+  assert.match(channel, /<title>\s*\S[\s\S]*?<\/title>/);
+  assert.match(channel, /<description>\s*\S[\s\S]*?<\/description>/);
+  const feedUrls = [...rss.matchAll(/<item>[\s\S]*?<link>([^<]+)<\/link>[\s\S]*?<\/item>/g)].map(
+    ([, url]) => url.replaceAll('&amp;', '&'),
+  );
+  assert.deepEqual(feedUrls.toSorted(), articleUrls.toSorted());
+
+  const sitemap = files(root)
+    .filter((path) => /sitemap-\d+\.xml$/.test(path))
+    .map((path) => readFileSync(path, 'utf8'))
+    .join('');
+  const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(
+    ([, url]) => new URL(url.replaceAll('&amp;', '&')),
+  );
+  const origin = new URL(articleUrls[0]).origin;
+  for (const url of sitemapUrls) {
+    assert.equal(url.origin, origin);
+    assert.ok(!['/search/', '/404/', '/404.html'].includes(url.pathname));
+  }
+  for (const path of ['/', '/blog/', '/notes/', '/cv/']) {
+    assert.ok(
+      sitemapUrls.some((url) => url.pathname === path),
+      `Missing sitemap entry: ${path}`,
+    );
+  }
+  for (const article of articleUrls) {
+    assert.ok(
+      sitemapUrls.some((url) => url.href === article),
+      `Missing article: ${article}`,
+    );
+    assert.equal(new URL(article).origin, origin);
+  }
+  assert.doesNotMatch(rss + sitemap, /PRIVATE_DRAFT_SENTINEL|\/draft-example\//);
 });
 
 test('all internal links, assets and heading anchors resolve in the static build', () => {

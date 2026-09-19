@@ -19,13 +19,13 @@ const {
 } = Astro.props;
 const pageTitle = title
   ? `${title} — ${profile.siteName}`
-  : `${profile.siteName} — 個人部落格・研究・履歷`;
+  : `${profile.siteName} — ${profile.role}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const nav = [
   { label: '首頁', path: '/' },
-  { label: '部落格', path: '/blog/' },
-  { label: '研究筆記', path: '/notes/' },
-  { label: '關於與履歷', path: '/cv/' },
+  { label: '文章', path: '/blog/' },
+  { label: '實作筆記', path: '/notes/' },
+  { label: '關於', path: '/cv/' },
 ];
 const active = (path: string) =>
   path === '/' ? Astro.url.pathname === '/' : Astro.url.pathname.startsWith(path);
@@ -36,9 +36,10 @@ const active = (path: string) =>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f7f8fa" />
+    <meta name="theme-color" content="#F7F4EC" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    {article && <meta name="author" content={profile.name} />}
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <meta property="og:title" content={pageTitle} />
@@ -67,7 +68,9 @@ const active = (path: string) =>
       <div class="header-inner">
         <a href="/" class="brand" aria-label={`${profile.siteName} 首頁`}>
           <span class="brand-mark" aria-hidden="true">
-            n<span>·</span>
+            <svg viewBox="0 0 48 48" fill="none">
+              <path d="M14 16H34M10 23H38M24 10V38M24 23L11 36M24 23L37 36" />
+            </svg>
           </span>
           <span>
             {profile.siteName}
@@ -101,11 +104,11 @@ const active = (path: string) =>
             {profile.siteName}
             <span class="blue">.</span>
           </a>
-          <p>保持好奇，持續書寫。</p>
+          <p>從一個問題開始，把想法寫清楚。</p>
         </div>
         <div class="footer-links">
           <a href="/blog/">閱讀文章</a>
-          <a href="/cv/">關於我</a>
+          <a href="/cv/">關於未完</a>
           <a href="/rss.xml">
             <Icon name="rss" size={14} /> RSS 訂閱
           </a>
@@ -115,9 +118,7 @@ const active = (path: string) =>
         <span>
           © {new Date().getFullYear()} {profile.siteName}
         </span>
-        <span>
-          想法在這裡，慢慢成形。 <span class="footer-dot" aria-hidden="true"></span>
-        </span>
+        <span>每一篇，都是下一個問題的起點。</span>
       </div>
     </footer>
   </body>

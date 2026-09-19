@@ -12,11 +12,11 @@ const entries = [...(await published('blog')), ...(await published('notes'))];
       <h1>
         尋找一個想法<span class="blue">.</span>
       </h1>
-      <p>搜尋部落格與研究筆記，接續你的探索。</p>
+      <p>搜尋文章與實作筆記，接續你的探索。</p>
     </header>
     <div class="search-panel">
       {!entries.length ? (
-        <p class="empty-state">還沒有已發布的文章或研究筆記。第一篇記錄，正在醞釀中。</p>
+        <p class="empty-state">還沒有已發布的文章或實作筆記。第一篇記錄，正在醞釀中。</p>
       ) : dev ? (
         <p class="empty-state">
           本機開發模式不建立搜尋索引。請執行 npm run build，再以 npm run preview 測試全文搜尋。
@@ -26,8 +26,8 @@ const entries = [...(await published('blog')), ...(await published('notes'))];
           <div id="search"></div>
           <p id="search-status" class="muted" role="status" hidden></p>
           <p id="search-fallback">
-            全文搜尋需要 JavaScript。你也可以瀏覽<a href="/blog/">部落格</a>或
-            <a href="/notes/">研究筆記</a>。
+            全文搜尋需要 JavaScript。你也可以瀏覽<a href="/blog/">文章</a>或
+            <a href="/notes/">實作筆記</a>。
           </p>
           <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
           <script is:inline src="/pagefind/pagefind-ui.js" defer></script>
@@ -44,7 +44,7 @@ const entries = [...(await published('blog')), ...(await published('notes'))];
                     placeholder: '搜尋文章、筆記或關鍵字…',
                     clear_search: '清除',
                     load_more: '載入更多結果',
-                    search_label: '搜尋文章與研究筆記',
+                    search_label: '搜尋文章與實作筆記',
                     searching: '搜尋中…',
                     zero_results: '找不到「[SEARCH_TERM]」的相關內容，試試其他關鍵字。',
                     one_result: '找到 [COUNT] 筆「[SEARCH_TERM]」的結果',
@@ -58,7 +58,7 @@ const entries = [...(await published('blog')), ...(await published('notes'))];
               } catch {
                 status.hidden = false;
                 status.textContent =
-                  '搜尋暫時無法載入，請重新整理，或從部落格與研究筆記列表繼續閱讀。';
+                  '搜尋暫時無法載入，請重新整理，或從文章與實作筆記列表繼續閱讀。';
               }
             });
           </script>
@@ -67,8 +67,8 @@ const entries = [...(await published('blog')), ...(await published('notes'))];
     </div>
     <div class="search-hints">
       <span>也可以直接瀏覽</span>
-      <a href="/blog/">部落格 →</a>
-      <a href="/notes/">研究筆記 →</a>
+      <a href="/blog/">文章 →</a>
+      <a href="/notes/">實作筆記 →</a>
     </div>
   </div>
 </Base>

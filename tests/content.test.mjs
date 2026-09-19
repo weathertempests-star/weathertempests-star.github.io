@@ -6,6 +6,7 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  readdirSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -66,6 +67,7 @@ test('missing required metadata fails clearly; a site containing only drafts rem
       'index.html',
       'blog/index.html',
       'notes/index.html',
+      'cv/index.html',
       'rss.xml',
       'sitemap-0.xml',
     ])
@@ -73,6 +75,21 @@ test('missing required metadata fails clearly; a site containing only drafts rem
         readFileSync(join(scratch, 'dist', path), 'utf8'),
         /SECRET_FIXTURE|\/private\//,
       );
+    const output = join(scratch, 'dist');
+    for (const path of readdirSync(output, { recursive: true }).filter((path) =>
+      path.endsWith('.html'),
+    )) {
+      const html = readFileSync(join(output, path), 'utf8');
+      for (const [, href] of html.matchAll(/\bhref="([^"]+)"/g)) {
+        const url = new URL(href.replaceAll('&amp;', '&'), `${env.SITE_URL}/${path}`);
+        if (url.origin !== env.SITE_URL || !/^\/(?:blog|notes)\/[^/]+/.test(url.pathname)) continue;
+        const target = join(output, decodeURIComponent(url.pathname));
+        assert.ok(
+          existsSync(url.pathname.endsWith('.html') ? target : join(target, 'index.html')),
+          `Unpublished article link ${href} in ${path}`,
+        );
+      }
+    }
     assert.match(readFileSync(join(scratch, 'dist/search/index.html'), 'utf8'), /還沒有已發布/);
     const indexed = spawnSync(process.execPath, [join(scratch, 'scripts/build-search.mjs')], {
       cwd: scratch,

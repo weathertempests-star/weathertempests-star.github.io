@@ -12,7 +12,11 @@ export default defineConfig({
   site: resolveSite(process.env),
   output: 'static',
   trailingSlash: 'always',
-  integrations: [sitemap({ filter: (page) => !page.endsWith('/404/') })],
+  integrations: [
+    sitemap({
+      filter: (page) => !['/search/', '/404/', '/404.html'].includes(new URL(page).pathname),
+    }),
+  ],
   markdown: {
     processor: unified({
       remarkPlugins: [remarkMath],

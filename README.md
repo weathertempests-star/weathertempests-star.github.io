@@ -1,19 +1,19 @@
-# 未完筆記 · 個人部落格與學術作品集
+# 未完筆記 · AI 協作與數位創作
 
-繁體中文、現代藍白版面的個人網站。使用 Astro 7、TypeScript、Markdown、KaTeX 與 Pagefind，輸出靜態檔案，部署到 GitHub Pages。
+未完的繁體中文創作與實驗筆記。從清楚的委託、可靠的引用到可重現的程式，探索如何和 AI 一起把想法做成作品。
 
-包含首頁、部落格、研究筆記、關於與履歷、全文搜尋、404、RSS 與 sitemap。首版個人資料是明確標示的待填內容；兩篇公開文章是排版示範。
+網站使用 Astro、TypeScript、Markdown、KaTeX 與 Pagefind，輸出靜態檔案並部署到 GitHub Pages。包含首頁、文章、實作筆記、關於、全文搜尋、RSS、sitemap 與 404；關於頁說明虛擬作者與人機共創方式。
 
 ## 本機預覽
 
-需要 Node.js 24（亦支援 22.12 以上版本）及 npm。
+建議 Node.js 24，最低版本為 22.12.0。安裝套件後啟動開發伺服器：
 
 ```bash
 npm ci
 npm run dev
 ```
 
-開啟終端機顯示的網址，預設是 `http://localhost:4321`。一般編輯會即時更新。搜尋索引在正式建置時建立，測試搜尋請改用：
+預設網址是 `http://localhost:4321`。全文搜尋在正式建置時產生，驗證搜尋請使用：
 
 ```bash
 npm run check
@@ -21,78 +21,62 @@ npm run build
 npm run preview
 ```
 
-若執行環境禁止寫入使用者設定目錄，可在指令前設定 `ASTRO_TELEMETRY_DISABLED=1`，例如 `ASTRO_TELEMETRY_DISABLED=1 npm run build`。
+受限環境可在指令前加上 `ASTRO_TELEMETRY_DISABLED=1`，避免 Astro 寫入使用者的遙測設定目錄。
 
-## 填入你的資料
+## 網站內容與作者介紹
 
-修改 [`src/data/profile.ts`](src/data/profile.ts)，即可更新站名、姓名、簡介、研究領域、Email、社群連結、學經歷、研究成果與技能。不需要修改頁面版型。
+- `src/content/blog/`：文章，記錄 AI 協作、寫作與創作工具中的方法和判斷。
+- `src/content/notes/`：實作筆記，提供推導、程式與可重現的小實驗。
+- `src/data/profile.ts`：公開站名、署名、角色、網站描述、簡介與關注主題。
+- `/cv/`：沿用既有網址的關於頁，介紹作者與網站，不展示空白履歷。
 
-- `siteName`：網站名稱，預設「未完筆記」。
-- `name`、`role`、`bio`：顯示名稱、身分簡述與自我介紹。
-- `description`：網站預設 SEO 及 RSS 說明。
-- `interests`：研究領域名稱陣列。
-- `email`、`links`：只填你想公開的資訊；空值不會產生聯絡按鈕。
-- `education`、`experience`、`publications`：每筆填入 `period`、`title`、`organization`、`description`，可加上 `url`。
-- `skills`：每筆包含 `category` 與 `items` 陣列。
+`profile.description` 同時用於預設 SEO 與 RSS；`profile.bio` 顯示於關於頁。Email 與社群連結僅填入希望公開的資訊，空值不產生聯絡入口。關於頁支援「列印 / 另存 PDF」，列印時隱藏導覽及操作按鈕。
 
-例如把 `education: []` 改為以下格式，並將所有提示替換為真實資料：
+首批三篇作品分別介紹創作委託、來源核對與程式驗收。舊文章網址 `learning-in-public` 和 `gradient-descent` 保留，方便既有連結繼續使用。
 
-```typescript
-education: [{
-  period: '就讀期間',
-  title: '學位／系所',
-  organization: '學校名稱',
-  description: '研究方向或補充說明',
-}],
-links: [{ label: 'GitHub', url: 'https://github.com/weathertempests-star' }],
-skills: [{ category: '程式語言', items: ['你使用的語言'] }],
-```
+### 新增文章
 
-履歷頁的「列印 / 另存 PDF」使用瀏覽器列印功能。選擇「另存為 PDF」即可下載，列印版會隱藏網站導覽和按鈕。
-
-## 新增文章與筆記
-
-部落格放在 `src/content/blog/`，研究筆記放在 `src/content/notes/`。新增 `.md` 檔案，例如 `my-first-post.md`：
+新增 Markdown，例如 `src/content/blog/my-next-question.md`：
 
 ```markdown
 ---
-title: '我的第一篇文章'
-description: '用一兩句話描述文章內容。'
+title: '下一個值得追問的問題'
+description: '用一兩句話說明本文處理的問題與讀者能得到的內容。'
 date: 2026-09-19
-tags: ['閱讀', '學習']
-draft: false
-featured: true
+tags: ['AI 協作', '數位寫作']
+draft: true
+featured: false
 sample: false
 ---
 
-## 從一個問題開始
+## 問題從哪裡開始
 
-在這裡寫下你的內容。
+用具體例子說明問題，並連結支持論點的來源。
 
-### 我的理解
+## 如何檢查
 
-使用 Markdown 撰寫文字、清單、連結與程式碼。
+留下能重做的步驟、結果與目前的限制。
 ```
 
-`title`、`description`、`date` 必填，缺漏或日期無法解析時建置會失敗並指出檔案。建議日期固定寫成 `YYYY-MM-DD`；網站顯示日期使用台北時區。
+`title`、`description`、`date` 必填；缺漏或無法解析的日期會讓建置失敗。日期使用 `YYYY-MM-DD`，網站依台北時區顯示。
 
-| 欄位       | 用途                                            | 預設    |
-| ---------- | ----------------------------------------------- | ------- |
-| `tags`     | 列表篩選與文章標籤                              | `[]`    |
-| `draft`    | 不產生公開頁面，不進入列表、RSS、sitemap 或搜尋 | `false` |
-| `featured` | 顯示於首頁精選區，最多兩篇，按日期由新到舊      | `false` |
-| `sample`   | 顯示「示範內容」標記與文章提示                  | `false` |
+| 欄位       | 用途                                           | 預設    |
+| ---------- | ---------------------------------------------- | ------- |
+| `tags`     | 文章分類與列表篩選                             | `[]`    |
+| `draft`    | 排除於公開頁面、列表、RSS、sitemap 與搜尋      | `false` |
+| `featured` | 首頁主打候選；目前只選第一篇，建議同時指定一篇 | `false` |
+| `sample`   | 標記僅供展示排版的範例；正式作品應為 `false`   | `false` |
 
-檔名決定文章網址，例如 `/blog/my-first-post/`。建議使用英文小寫與連字號，發布後保留檔名以維持網址穩定。修改標題不會改變網址。日期只用於排序，**不提供定時發布**；未準備公開的內容請設定 `draft: true`。草稿在本機開發模式也不會產生頁面；預覽草稿時可暫時改為 `false`，提交前再還原。
+檔名決定網址；發布後保留檔名，修改標題不會改變網址。日期只影響排序，不提供定時發布。未完成的文章設為 `draft: true`，完成查證、校閱與建置驗證後再改為 `false`。
 
-若儲存庫為公開，Markdown 原始檔仍可從 GitHub 讀取；`draft` 控制的是網站發布狀態。
+草稿在開發模式也不產生頁面。如需預覽，可暫時改為 `false`，提交前還原。公開儲存庫的原始檔仍可被讀取，`draft` 只控制網站輸出，私密素材不要放入內容目錄。
 
 ### 圖片、公式與引用
 
-將圖片放入 `public/images/`，在 Markdown 使用站內絕對路徑及圖片描述：
+圖片放在 `public/images/`，使用站內絕對路徑及有意義的替代文字。數學公式使用 KaTeX，程式區塊標明語言；二級與三級標題自動產生文章目錄。
 
 ```markdown
-![描述這張圖片的內容](/images/my-image.png)
+![描述圖片傳達的資訊](/images/knowledge-garden.svg)
 
 行內公式：$E = mc^2$
 
@@ -102,58 +86,34 @@ $$
 
 ## 參考資料
 
-1. 作者，[文章或論文標題](https://example.com/paper)。
+1. 作者，[直接支持論點的來源](https://example.com/paper)。
 ```
 
-程式碼區塊在三個反引號後加上 `python`、`javascript` 等語言名稱即可高亮。二級與三級標題會自動成為文章目錄。首版使用手動參考文獻，未整合 BibTeX。
+涉及程式或數值時執行範例，確認正文、表格與輸出一致；明確區分引用的事實、教學示例及作者提出的方法。
 
-可直接在 GitHub 網頁新增／修改 Markdown，提交到 `main` 後會自動重新部署。也可以在本機編輯，透過 Git 推送。
-
-## 部署到 GitHub Pages
-
-此版本使用個人網站根網址 `https://<帳號>.github.io/`，不支援 `/repo/` 子路徑。正式部署網址會由 GitHub Actions 的儲存庫資訊自動設定，不必把帳號寫進程式碼。
-
-1. 在 GitHub 建立名為 **`<你的帳號>.github.io`** 的儲存庫。使用 GitHub Free 時選擇 Public。若要從這份資料夾直接推送，建立時不要勾選額外的 README、License 或 `.gitignore`。
-2. 在此專案根目錄開啟終端機；若尚未初始化 Git，可使用以下指令。將 `YOUR_USERNAME` 替換為實際帳號。
-
-   ```bash
-   git init -b main
-   git add .
-   git commit -m "Create personal blog and research website"
-   git remote add origin https://github.com/YOUR_USERNAME/YOUR_USERNAME.github.io.git
-   git push -u origin main
-   ```
-
-   若已有 Git 儲存庫或 remote，先確認現有設定，再接上正確的遠端。Git 登入請使用 GitHub 提供的驗證方式，不要把密碼或權杖寫進專案。
-
-3. 進入 GitHub 儲存庫的 **Settings → Pages → Build and deployment → Source**，選擇 **GitHub Actions**。
-4. 到 **Actions → Check and deploy personal website** 查看執行結果。如果第一次執行在啟用 Pages 前已失敗，設定完成後重新執行工作流程。
-5. 成功後開啟 `https://YOUR_USERNAME.github.io/`，確認文章可直接開啟、圖片正常、搜尋能找到中英文內容，以及履歷列印正常。
-
-工作流程先進行型別檢查、建置、輸出驗證與瀏覽器測試，再發布 `dist/`。Pull request 只檢查，不會部署；只有 `main` 的推送或手動執行才會部署。部署使用 GitHub 自動提供的權限，不需要額外設定網站服務金鑰。
-
-如果儲存庫名稱不符合個人網站格式，建置會提示修正，避免產生錯誤的站內連結。若部署失敗，先看 Actions 的失敗步驟；建置失敗不會取代上一個成功部署的版本。
-
-本機需要測試正式網址時，可將 `.env.example` 複製為 `.env`，設定：
-
-```dotenv
-SITE_URL=https://YOUR_USERNAME.github.io
-```
-
-`.env` 不會提交至 Git。未設定時使用 `http://localhost:4321`；GitHub Actions 一律使用實際儲存庫網址。此設定會套用到 canonical、Open Graph、RSS 與 sitemap。
-
-## 驗證與專案維護
+## 驗證
 
 ```bash
 npm run check
 npm run build
 npm test
-npx playwright install chromium
+npx playwright install --only-shell chromium
 npm run test:e2e
 ```
 
-瀏覽器測試包含桌面與手機排版、中文／英文搜尋、標籤網址與上一頁行為、文章目錄、公式、圖片、履歷列印及 404。單元與建置驗證涵蓋部署網址、必要輸出、站內連結、標題錨點及草稿排除。
+檢查涵蓋部署網址、必要輸出、站內連結與標題錨點、metadata、草稿排除、搜尋與標籤，以及桌面／手機導覽、鍵盤操作、文章閱讀、列印、404 和無 JavaScript 降級。
 
-正式網站的檔案在 `dist/`，不必提交；請提交來源檔、設定與 `package-lock.json`。修改套件後同步更新鎖定檔，讓本機與 GitHub Actions 使用相同版本。
+瀏覽器測試需要能啟動 Chromium 與本機伺服器；內容測試需要能建立子程序。若環境回報 `EPERM`，應調整執行環境權限，保留原有測試斷言。建置完成後的網站檔案位於 `dist/`，不提交建置輸出。
 
-參考：[GitHub Pages 快速入門](https://docs.github.com/en/pages/quickstart)、[Astro 部署文件](https://docs.astro.build/en/guides/deploy/github/)、[Pagefind 中文搜尋](https://pagefind.app/docs/multilingual/)。
+## GitHub Pages 發布
+
+此專案部署於個人網站根網址 `https://<帳號>.github.io/`，不支援 `/repo/` 子路徑。GitHub Actions 會從儲存庫資訊設定正式網址，用於 canonical、Open Graph、RSS 與 sitemap。
+
+1. 儲存庫名稱使用 `<帳號>.github.io`。
+2. 在 **Settings → Pages → Build and deployment → Source** 選擇 **GitHub Actions**。
+3. 提交來源檔與 `package-lock.json`，推送至 `main`；工作流程依序執行型別檢查、建置、內容驗證與瀏覽器測試。
+4. 確認 **Check and deploy personal website** 成功，再檢查線上頁面、文章直接連結與搜尋。
+
+Pull request 只檢查、不部署。`main` 的推送或手動執行會發布 `dist/`；建置或測試失敗不會取代上一個成功版本。發布使用 GitHub 提供的權限，不需要把網站金鑰放入專案。
+
+本機要驗證正式網址時，可複製 `.env.example` 為 `.env` 並設定 `SITE_URL=https://<帳號>.github.io`。`.env` 已排除版本控制；未設定時使用本機網址，GitHub Actions 一律使用實際儲存庫網址。

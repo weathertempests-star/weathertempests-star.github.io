@@ -12,16 +12,16 @@ const tags = [...new Set(entries.flatMap((entry) => entry.data.tags))].sort((a, 
   a.localeCompare(b, 'zh-Hant'),
 );
 const note = collection === 'notes';
-const title = note ? '研究筆記' : '部落格';
+const title = note ? '實作筆記' : '文章';
 const description = note
-  ? '把複雜的問題拆開，把零散的理解連起來。記錄閱讀、推導與探索的過程。'
-  : '學到的事、讀過的文字，以及日常裡值得留下的想法。';
+  ? '用程式、推導與小型實驗檢查想法。留下可以重做的步驟，也說清楚結果的邊界。'
+  : '關於 AI 協作、數位寫作與創作工具。從一個具體問題出發，整理值得留下的判斷。';
 ---
 
 <Base title={title} description={description}>
   <div class="container page-container">
     <header class="page-heading">
-      <div class="eyebrow">{note ? 'RESEARCH & EXPLORATION' : 'THOUGHTS & STORIES'}</div>
+      <div class="eyebrow">{note ? 'SMALL EXPERIMENTS' : 'ESSAYS & METHODS'}</div>
       <h1>
         {title}
         <span class="blue">.</span>

@@ -4,12 +4,13 @@ import 'katex/dist/katex.min.css';
 import Base from './Base.astro';
 import { entryUrl, formatDate, readingTime, type Entry } from '../lib/content';
 import Icon from '../components/Icon.astro';
+import { profile } from '../data/profile';
 interface Props {
   entry: Entry;
 }
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
-const label = entry.collection === 'notes' ? '研究筆記' : '部落格';
+const label = entry.collection === 'notes' ? '實作筆記' : '文章';
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 ---
 
@@ -21,7 +22,10 @@ const toc = headings.filter((heading) => heading.depth === 2 || heading.depth ==
     <article data-pagefind-body>
       <header class="article-heading">
         <div class="entry-meta">
-          <span class="category" data-pagefind-meta="type">
+          <span
+            class:list={['category', { 'category-note': entry.collection === 'notes' }]}
+            data-pagefind-meta="type"
+          >
             {label}
           </span>
           {entry.data.sample && <span class="sample-label">示範內容</span>}
@@ -31,6 +35,10 @@ const toc = headings.filter((heading) => heading.depth === 2 || heading.depth ==
         <h1 data-pagefind-meta="title">{entry.data.title}</h1>
         <p class="article-description" data-pagefind-meta="description">
           {entry.data.description}
+        </p>
+        <p class="article-byline" data-pagefind-ignore>
+          <a href="/cv/">{profile.name}</a>
+          <span aria-hidden="true">／</span>未完筆記
         </p>
         <div class="tags article-tags">
           {entry.data.tags.map((tag) => (
@@ -50,7 +58,7 @@ const toc = headings.filter((heading) => heading.depth === 2 || heading.depth ==
         {toc.length > 0 && (
           <aside class="toc" data-pagefind-ignore>
             <nav aria-label="文章目錄">
-              <span class="eyebrow">ON THIS PAGE</span>
+              <span class="eyebrow">CONTENTS</span>
               <h2>文章目錄</h2>
               <ul>
                 {toc.map((heading) => (
@@ -64,7 +72,7 @@ const toc = headings.filter((heading) => heading.depth === 2 || heading.depth ==
         )}
       </div>
       <div class="article-end" data-pagefind-ignore>
-        <span>筆記在這裡，思考繼續。</span>
+        <span>讀到這裡，再帶走一個問題。</span>
         <a class="text-link" href={`/${entry.collection}/`}>
           更多{label} <Icon name="arrow" size={17} />
         </a>

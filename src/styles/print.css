@@ -15,7 +15,9 @@
   #print-cv,
   .profile-avatar,
   .profile-card > .text-link,
-  .cv-heading > div > p {
+  .toc,
+  .back-link,
+  .article-end {
     display: none !important;
   }
   .container {
@@ -24,13 +26,16 @@
     margin: 0 !important;
     padding: 0 !important;
   }
-  .cv-heading {
+  .cv-heading,
+  .article-heading {
     margin-bottom: 20px !important;
   }
-  .cv-heading h1 {
+  .cv-heading h1,
+  .article-heading h1 {
     font-size: 24pt !important;
   }
-  .cv-grid {
+  .cv-grid,
+  .article-grid {
     display: block !important;
   }
   .profile-card {
@@ -38,6 +43,7 @@
     border: 0 !important;
     border-bottom: 1px solid #ccc !important;
     margin-bottom: 20px !important;
+    background: none !important;
   }
   .profile-divider {
     display: none !important;
@@ -59,28 +65,41 @@
     margin-bottom: 18px !important;
     break-inside: avoid;
   }
-  .cv-section h2 {
+  .cv-section h2,
+  .prose h2 {
     font-size: 16pt !important;
-    margin: 5px 0 12px !important;
+    margin: 18px 0 12px !important;
   }
-  .timeline-entry {
-    break-inside: avoid;
+  .cv-section > p,
+  .cv-section li,
+  .prose {
+    font-size: 11pt !important;
+    color: #111 !important;
   }
-  .placeholder-block {
-    padding: 8px !important;
-    background: none !important;
-    border: 1px dashed #ccc !important;
-  }
-  .cv-page a[href^='http']:after {
+  .cv-page a[href^='http']::after {
     content: ' (' attr(href) ')';
     font-size: 9pt;
     overflow-wrap: anywhere;
   }
-  .cv-page a {
+  .cv-page a,
+  .article-container a {
     color: inherit !important;
   }
-  .tags span {
+  .tags span,
+  .tags a {
     background: none !important;
     color: inherit !important;
+  }
+  .prose pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .prose h2,
+  .prose h3 {
+    break-after: avoid;
+  }
+  .prose img,
+  .prose blockquote {
+    break-inside: avoid;
   }
 }
