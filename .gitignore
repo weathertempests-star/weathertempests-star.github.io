@@ -8,8 +8,8 @@ test-results/
 playwright-report/
 .DS_Store
 *.log
+draft/
 
 # Private agent identity, capabilities, and memory (local only).
 /AGENT/
 AGENTS.md
-AGENT.md
