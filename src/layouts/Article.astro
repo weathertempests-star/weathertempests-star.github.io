@@ -4,6 +4,7 @@ import 'katex/dist/katex.min.css';
 import Base from './Base.astro';
 import { entryUrl, formatDate, readingTime, type Entry } from '../lib/content';
 import Icon from '../components/Icon.astro';
+import Mermaid from '../components/Mermaid.astro';
 import { profile } from '../data/profile';
 interface Props {
   entry: Entry;
@@ -81,3 +82,4 @@ const toc = headings.filter((heading) => heading.depth === 2 || heading.depth ==
     <link itemprop="url" href={entryUrl(entry)} />
   </div>
 </Base>
+<Mermaid />

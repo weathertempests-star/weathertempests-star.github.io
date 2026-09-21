@@ -21,9 +21,9 @@
 ### 01｜TrustZone、OP-TEE 與信任邊界
 
 - **狀態：**首篇內容已完成；不需先備知識。  
-- **操作環境與程式：**紙上練習，不安裝工具或執行程式。  
-- **可交付成果：**一張區分 Normal World、Secure World、資產與不可信輸入的信任邊界圖。  
-- **驗收條件：**能說明 Linux root 為何不等同 Secure World，也能指出「金鑰不匯出」仍需要呼叫者授權。  
+- **操作環境與程式：**概念與案例分析，不安裝工具或執行程式。  
+- **可交付成果：**以元件圖與資料表說明 Normal World、Secure World、資產與不可信輸入。  
+- **驗收條件：**文章說明 Linux root 為何不等同 Secure World，並指出「金鑰不匯出」仍需要呼叫者授權。  
 - **第一手參考：**[OP-TEE About](https://optee.readthedocs.io/en/latest/general/about.html)、[OP-TEE Core](https://optee.readthedocs.io/en/latest/architecture/core.html)。
 
 ### 02｜Linux 工具、QEMU 啟動與 xtest
@@ -116,7 +116,7 @@
 
 ## 從第 01 篇走到第一個實作
 
-第 01 篇完成紙上信任邊界後，下一個可驗收目標是第 02 篇的 QEMU 啟動與 `xtest`。  
+第 01 篇以金鑰服務整理信任邊界；第 02 篇接續記錄 QEMU 啟動與 `xtest` 的實作。  
 在此之前不需要 Jetson、私有板卡路徑或既有 TA 專案。  
 後續章節沿用已驗證的環境，另行固定範例程式的 revision。  
 若需要升級基礎環境，會記錄版本差異並重跑受影響的實驗，讓讀者能從上一章接續。

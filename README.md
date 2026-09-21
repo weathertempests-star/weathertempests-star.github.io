@@ -91,6 +91,30 @@ $$
 
 涉及程式或數值時執行範例，確認正文、表格與輸出一致；明確區分引用的事實、教學示例及作者提出的方法。
 
+### Mermaid 圖表
+
+流程、元件關係與信任邊界使用 `mermaid` 程式區塊，不以空白及箭頭字元拼出流程圖。
+例如：
+
+````markdown
+```mermaid
+flowchart TB
+  accTitle: 請求與結果
+  accDescr: 用戶端送出請求，服務處理後將結果傳回用戶端。
+  client[用戶端] -->|請求| service[服務]
+  service -->|結果| client
+```
+````
+
+每張圖需有單行 `accTitle` 與 `accDescr`；前者作為圖名，後者說明圖所傳達的關係。
+缺少任一欄位會使建置失敗。優先使用由上往下的簡潔布局，圖中保留短標籤，細節放在正文。
+
+Astro 的 remark 插件保留圖說與可展開的原始碼，再由隨站部署的 Mermaid 模組在瀏覽器中繪製 SVG；沒有圖的文章不下載繪圖模組。
+圖表使用 strict 模式，無 JavaScript 或載入失敗時仍可閱讀文字說明。較寬的圖可在圖框內左右捲動，列印時縮至頁面寬度。
+語法與無障礙欄位參考 [Mermaid 官方用法](https://mermaid.js.org/config/usage.html)及[無障礙說明](https://mermaid.js.org/config/accessibility.html)。
+
+`npm run build` 檢查圖說欄位；瀏覽器測試才會驗證實際 SVG 渲染，修改圖表後需執行 `npm run test:e2e` 並確認桌面與手機呈現。
+
 ## 驗證
 
 ```bash

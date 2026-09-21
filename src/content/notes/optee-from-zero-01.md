@@ -67,17 +67,23 @@ CA 先建立連線，再開啟與指定 TA 的 session，也就是一段互動�
 
 把呼叫路徑簡化後，可以畫成：
 
-```text
-Normal World
-  CA → libteec → Linux TEE driver
-                       ↓ 請求
-                 Secure Monitor
-                       ↓
-Secure World
-                OP-TEE OS → TA
+```mermaid
+flowchart TB
+  accTitle: CA 與 TA 的基本 SMC 呼叫路徑
+  accDescr: CA 經 libteec 和 Linux TEE driver 發出請求，由 Secure Monitor 協調切換，再由 Secure World 的 OP-TEE OS 將請求交給 TA。
+  subgraph normal[Normal World]
+    ca[CA] --> libteec[libteec] --> driver[Linux TEE driver]
+  end
+  monitor[Secure Monitor]
+  subgraph secure[Secure World]
+    optee[OP-TEE OS] --> ta[TA]
+  end
+  driver -->|SMC 請求| monitor
+  monitor --> optee
 ```
 
 這張圖採使用 SMC 通訊的基本部署；其他配置可能有不同路徑。  
+為了把切換位置畫清楚，Secure Monitor 放在兩個 World 的分組之外；這是架構上的簡化，圖中位置不代表它是獨立於整個系統的第三個硬體區域。  
 在這個模型中，SMC 指令讓處理器進入 Secure Monitor 處理；Monitor 協調安全狀態的切換，再由 OP-TEE 處理送來的服務請求。[Linux OP-TEE driver](https://docs.kernel.org/tee/op-tee.html)、[OP-TEE 切換流程](https://optee.readthedocs.io/en/latest/architecture/core.html#normal-world-invokes-op-tee-os-using-smc)
 
 CA 發出請求後，仍然是 Normal World 的程式。  
@@ -102,6 +108,25 @@ CA 發出請求後，仍然是 Normal World 的程式。
 
 沿著一次簽章請求觀察，挑戰訊息由 CA 傳入 TA，簽章結果再回到 CA；私鑰則留在 TA 使用的安全記憶體中。  
 即使請求跨過了信任邊界，攻擊者仍能影響經過 Linux 的資料。
+
+```mermaid
+flowchart TB
+  accTitle: 暫定金鑰服務的跨界資料流
+  accDescr: 挑戰訊息由 Normal World 的 CA 傳給 Secure World 的 TA，簽章結果由 TA 傳回 CA。私鑰只在 Secure World 的 TA 內使用，不會傳回 CA。
+  subgraph normal[Normal World]
+    ca[CA]
+  end
+  subgraph secure[Secure World]
+    ta[TA]
+    key[私鑰]
+    ta ---|使用| key
+  end
+  ca -->|挑戰訊息| ta
+  ta -->|簽章結果| ca
+```
+
+這張圖省略了 libteec、driver 與 Monitor，只保留服務介面上的資料流：跨界的是訊息和結果，私鑰不必離開 TA。  
+箭頭表示資料的傳遞方向，不代表資料跨界後就可信；經過 Linux 的訊息仍可能被替換或重送。
 
 ### 資料的位置與可見範圍
 
@@ -145,6 +170,28 @@ OP-TEE 官方提供 Armv8-A 的 QEMU 建置流程，因此可以先沿著一套�
 QEMU 的系統模擬包含處理器、記憶體和裝置，這些都在主機上運作。[QEMU 系統模擬介紹](https://www.qemu.org/docs/master/system/introduction.html)  
 由這個模型可知，模擬系統裡的 Secure World 不能用來對抗控制主機的攻擊者。  
 我們用它學程式行為與測試方法；實體硬體的隔離、啟動設定與攻擊防護，留到對應的平台驗證。
+
+```mermaid
+flowchart TB
+  accTitle: QEMU 主機與模擬 Arm 系統的範圍
+  accDescr: 主機執行 QEMU，QEMU 模擬 Arm 系統的 Normal World 和 Secure World。控制主機的攻擊者也能影響 QEMU，因此模擬系統內的 Secure World 無法提供對抗該攻擊者的隔離。
+  controller[攻擊者]
+  subgraph host[開發主機]
+    direction TB
+    hostlinux[主機 Linux]
+    subgraph qemu[QEMU：模擬 Arm 系統]
+      direction TB
+      normal[Normal World]
+      secure[Secure World]
+      normal ~~~ secure
+    end
+    hostlinux -->|執行| qemu
+  end
+  controller -.已控制.-> hostlinux
+```
+
+圖中的 Secure World 是 QEMU 所模擬系統的一部分，不是主機上的保護容器。  
+它很適合用來觀察程式與呼叫路徑，但無法據此推論實體平台具有相同的隔離效果。
 
 ## 後續的學習方向
 

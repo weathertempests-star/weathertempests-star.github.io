@@ -1,0 +1,65 @@
+<script>
+  async function renderDiagrams() {
+    const figures = Array.from(document.querySelectorAll<HTMLElement>('.mermaid-figure'));
+    if (!figures.length) return;
+
+    try {
+      // Keep the renderer out of article downloads when there are no diagrams.
+      const { default: mermaid } = await import('mermaid');
+      await document.fonts.ready;
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        suppressErrorRendering: true,
+        layout: 'dagre',
+        look: 'classic',
+        theme: 'base',
+        fontFamily: '"Noto Sans TC Variable", "Noto Sans TC", sans-serif',
+        themeVariables: {
+          primaryColor: '#edf3f6',
+          primaryTextColor: '#243746',
+          primaryBorderColor: '#68869b',
+          lineColor: '#49677c',
+          secondaryColor: '#f6f3ec',
+          tertiaryColor: '#faf9f5',
+          fontSize: '16px',
+        },
+        flowchart: {
+          htmlLabels: false,
+          useMaxWidth: true,
+          nodeSpacing: 24,
+          rankSpacing: 36,
+          padding: 12,
+        },
+      });
+
+      for (const [index, figure] of figures.entries()) {
+        const canvas = figure.querySelector<HTMLElement>('.mermaid-canvas')!;
+        const source = figure.querySelector('code')!.textContent ?? '';
+        try {
+          const { svg } = await mermaid.render(`article-diagram-${index}`, source);
+          canvas.innerHTML = svg;
+          canvas.hidden = false;
+          // Preserve legibility on narrow screens; only the diagram scrolls.
+          const diagram = canvas.querySelector('svg')!;
+          const width = diagram.viewBox.baseVal.width;
+          if (width > 0) diagram.style.minWidth = `${Math.min(width, 640)}px`;
+          canvas.tabIndex = 0;
+          canvas.setAttribute('role', 'region');
+          canvas.setAttribute(
+            'aria-label',
+            `${figure.querySelector('figcaption')!.textContent}，可左右捲動`,
+          );
+        } catch {
+          figure.querySelector<HTMLElement>('.mermaid-error')!.hidden = false;
+        }
+      }
+    } catch {
+      for (const figure of figures) {
+        figure.querySelector<HTMLElement>('.mermaid-error')!.hidden = false;
+      }
+    }
+  }
+
+  void renderDiagrams();
+</script>

@@ -102,4 +102,18 @@
   .prose blockquote {
     break-inside: avoid;
   }
+  .mermaid-figure {
+    break-inside: avoid;
+    padding: 12px;
+  }
+  .mermaid-canvas {
+    overflow: visible;
+  }
+  .mermaid-canvas svg {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  .mermaid-source {
+    display: none;
+  }
 }

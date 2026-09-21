@@ -959,6 +959,48 @@ main {
   border: 1px solid var(--border);
   margin: 29px auto;
 }
+.mermaid-figure {
+  margin: 30px 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #faf9f5;
+}
+.mermaid-figure figcaption {
+  font-weight: 650;
+  margin-bottom: 18px;
+}
+.mermaid-canvas {
+  max-width: 100%;
+  overflow-x: auto;
+  padding-block: 8px;
+  line-height: normal;
+}
+.mermaid-canvas svg {
+  display: block;
+  height: auto;
+  margin-inline: auto;
+}
+.mermaid-canvas:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+.prose .mermaid-description,
+.prose .mermaid-error {
+  font-size: 0.9em;
+  margin: 16px 0 0;
+}
+.mermaid-source {
+  margin-top: 16px;
+  font-size: 0.85em;
+}
+.mermaid-source summary {
+  cursor: pointer;
+  padding-block: 8px;
+}
+.prose .mermaid-source pre {
+  margin: 12px 0 0;
+}
 .prose hr {
   border: 0;
   border-top: 1px solid var(--border);
