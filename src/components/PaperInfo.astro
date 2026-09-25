@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '../lib/content';
+interface Props {
+  paper: CollectionEntry<'notes'>['data']['paper'];
+}
+const { paper } = Astro.props;
+---
+
+<aside class="paper-info" aria-label="本文閱讀的論文">
+  <div class="paper-info-heading">
+    <span class="eyebrow">PAPER IN FOCUS</span>
+    <span class="paper-status">{paper.status === 'preprint' ? '預印本' : '已出版'}</span>
+  </div>
+  <p class="paper-title">
+    <a href={paper.url} lang="en">
+      {paper.title}
+    </a>
+  </p>
+  <p class="paper-authors" lang="en">
+    {paper.authors.join(' · ')}
+  </p>
+  <dl class="paper-details">
+    <div>
+      <dt>{paper.status === 'preprint' ? '首次提交' : '論文發表'}</dt>
+      <dd>
+        <time datetime={paper.published.toISOString()}>{formatDate(paper.published)}</time>
+      </dd>
+    </div>
+    {paper.version && (
+      <div>
+        <dt>閱讀版本</dt>
+        <dd>{paper.version}</dd>
+      </div>
+    )}
+    {paper.venue && (
+      <div>
+        <dt>發表於</dt>
+        <dd>{paper.venue}</dd>
+      </div>
+    )}
+  </dl>
+  <a class="paper-source-link" href={paper.url}>
+    閱讀原論文 <span aria-hidden="true">↗</span>
+  </a>
+</aside>

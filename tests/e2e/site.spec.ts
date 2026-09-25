@@ -28,7 +28,7 @@ test('navigation, metadata, responsive layout and keyboard skip link', async ({ 
     await expect(navigation).toBeVisible();
     for (const [label, href] of [
       ['文章', '/blog/'],
-      ['實作筆記', '/notes/'],
+      ['研究筆記', '/notes/'],
       ['關於', '/cv/'],
     ]) {
       await expect(navigation.getByRole('link', { name: label, exact: true })).toHaveAttribute(
@@ -126,6 +126,10 @@ test('math, code highlighting, article anchors, image and print stylesheet', asy
     if (await math.count()) await expect(math).toBeVisible();
     const code = page.locator('pre.astro-code').first();
     if (await code.count()) await expect(code).toBeVisible();
+    const toc = page.locator('.toc-disclosure');
+    if ((await toc.count()) && !(await toc.evaluate((node: HTMLDetailsElement) => node.open))) {
+      await toc.locator('summary').click();
+    }
     const anchor = page.getByRole('navigation', { name: '文章目錄' }).getByRole('link').first();
     if (await anchor.count()) {
       await anchor.click();

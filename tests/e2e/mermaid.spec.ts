@@ -1,6 +1,18 @@
 import { expect, test } from '@playwright/test';
+import { readingFixture } from '../fixtures/reading.mjs';
 
-const article = '/notes/optee-from-zero-01/';
+const article = '/__test/mermaid/';
+const withoutDiagrams = '/__test/math-code/';
+
+test.beforeEach(async ({ context }) => {
+  const [diagrams, mathCode] = await Promise.all([readingFixture(), readingFixture(false)]);
+  await context.route(`**${article}`, (route) =>
+    route.fulfill({ contentType: 'text/html', body: diagrams }),
+  );
+  await context.route(`**${withoutDiagrams}`, (route) =>
+    route.fulfill({ contentType: 'text/html', body: mathCode }),
+  );
+});
 
 test('Mermaid diagrams render with accessible labels, readable sizing and print support', async ({
   page,
@@ -36,8 +48,11 @@ test('Mermaid diagrams render with accessible labels, readable sizing and print 
 
 test('diagram descriptions and source remain available without JavaScript', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
+  const body = await readingFixture();
+  await context.route(`**${article}`, (route) => route.fulfill({ contentType: 'text/html', body }));
   const page = await context.newPage();
   await page.goto(article);
+  await expect(page.locator('.mermaid-figure')).toHaveCount(3);
   for (const figure of await page.locator('.mermaid-figure').all()) {
     await expect(figure.locator('figcaption')).toBeVisible();
     await expect(figure.locator('.mermaid-description')).toBeVisible();
@@ -51,11 +66,8 @@ test('diagram descriptions and source remain available without JavaScript', asyn
 test('a malformed diagram retains its explanation without breaking other diagrams', async ({
   page,
 }) => {
-  await page.route(`**${article}`, async (route) => {
-    const response = await route.fetch();
-    const body = (await response.text()).replace('flowchart TB', 'not-a-diagram');
-    await route.fulfill({ response, body });
-  });
+  const body = (await readingFixture()).replace('flowchart TB', 'not-a-diagram');
+  await page.route(`**${article}`, (route) => route.fulfill({ contentType: 'text/html', body }));
   await page.goto(article);
   await expect(page.locator('.mermaid-error').first()).toBeVisible();
   await expect(page.locator('.mermaid-description').first()).toBeVisible();
@@ -69,7 +81,7 @@ test('renderer loads only on articles with diagrams and fails gracefully if unav
   page.on('request', (request) => {
     if (/\/mermaid[^/]*\.js/.test(request.url())) rendererRequests.push(request.url());
   });
-  await page.goto('/notes/gradient-descent/');
+  await page.goto(withoutDiagrams);
   await expect(page.locator('.katex-display').first()).toBeVisible();
   await expect(page.locator('pre.astro-code').first()).toBeVisible();
   expect(rendererRequests).toEqual([]);

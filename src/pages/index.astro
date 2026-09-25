@@ -10,7 +10,7 @@ const entries = [...blog, ...notes].sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime() || entryUrl(a).localeCompare(entryUrl(b)),
 );
 const leadEntry = entries.find((entry) => entry.data.featured) ?? entries[0];
-const moreEntries = entries.filter((entry) => entry !== leadEntry).slice(0, 4);
+const moreEntries = blog.filter((entry) => entry !== leadEntry).slice(0, 4);
 const topics = new Map<string, string>();
 for (const entry of entries) {
   for (const tag of entry.data.tags) {
@@ -56,7 +56,7 @@ for (const entry of entries) {
         <article class="feature-story">
           <div class="feature-copy">
             <div class="entry-meta">
-              <span class="category">{leadEntry.collection === 'notes' ? '實作筆記' : '文章'}</span>
+              <span class="category">{leadEntry.collection === 'notes' ? '研究筆記' : '文章'}</span>
               {leadEntry.data.sample && <span class="sample-label">示範內容</span>}
               <time datetime={leadEntry.data.date.toISOString()}>
                 {formatDate(leadEntry.data.date)}
@@ -105,6 +105,26 @@ for (const entry of entries) {
         </div>
         <div class="featured-grid">
           {moreEntries.map((entry) => (
+            <EntryCard entry={entry} />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {notes.length > 0 && (
+      <section class="home-research section-block" aria-labelledby="research-heading">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">RESEARCH NOTES</div>
+            <h2 id="research-heading">讀進研究裡</h2>
+          </div>
+          <a class="text-link" href="/notes/">
+            所有研究筆記 <Icon name="arrow" size={17} />
+          </a>
+        </div>
+        <p class="section-description">從 AI 代理到機密運算，理解方法，也檢查證據能支持多遠。</p>
+        <div class="research-grid">
+          {notes.slice(0, 3).map((entry) => (
             <EntryCard entry={entry} />
           ))}
         </div>

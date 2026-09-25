@@ -19,6 +19,16 @@ export const collections = {
   }),
   notes: defineCollection({
     loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
-    schema,
+    schema: schema.extend({
+      paper: z.object({
+        title: z.string().trim().min(1),
+        authors: z.array(z.string().trim().min(1)).min(1),
+        url: z.url({ protocol: /^https?$/ }),
+        published: z.coerce.date(),
+        status: z.enum(['preprint', 'published']),
+        version: z.string().trim().min(1).optional(),
+        venue: z.string().trim().min(1).optional(),
+      }),
+    }),
   }),
 };

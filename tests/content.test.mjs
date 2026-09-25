@@ -54,10 +54,23 @@ test('missing required metadata fails clearly; a site containing only drafts rem
     assert.notEqual(invalidResult.status, 0);
     assert.match(invalidResult.stdout + invalidResult.stderr, /description/);
     rmSync(invalid);
+    const invalidNote = join(scratch, 'src/content/notes/invalid.md');
+    writeFileSync(
+      invalidNote,
+      '---\ntitle: No paper\ndescription: Missing source\ndate: 2026-09-25\n---\nContent',
+    );
+    const invalidPaperResult = build();
+    assert.notEqual(invalidPaperResult.status, 0);
+    assert.match(invalidPaperResult.stdout + invalidPaperResult.stderr, /paper/);
+    rmSync(invalidNote);
     for (const collection of ['blog', 'notes'])
       writeFileSync(
         join(scratch, 'src/content', collection, 'private.md'),
-        '---\ntitle: SECRET_FIXTURE\ndescription: SECRET_FIXTURE\ndate: 2026-09-19\ndraft: true\nfeatured: true\n---\nSECRET_FIXTURE',
+        '---\ntitle: SECRET_FIXTURE\ndescription: SECRET_FIXTURE\ndate: 2026-09-19\ndraft: true\nfeatured: true\n' +
+          (collection === 'notes'
+            ? 'paper:\n  title: SECRET_FIXTURE\n  authors: [SECRET_FIXTURE]\n  url: https://example.com/paper\n  published: 2026-09-01\n  status: preprint\n'
+            : '') +
+          '---\nSECRET_FIXTURE',
       );
     const emptyResult = build();
     assert.equal(emptyResult.status, 0, emptyResult.stdout + emptyResult.stderr);

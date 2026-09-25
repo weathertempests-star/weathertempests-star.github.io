@@ -41,7 +41,7 @@ test('static output contains required pages and search assets', () => {
     'blog/index.html',
     'blog/learning-in-public/index.html',
     'notes/index.html',
-    'notes/gradient-descent/index.html',
+    'notes/evirca/index.html',
     'cv/index.html',
     'search/index.html',
     '404.html',
@@ -128,5 +128,37 @@ test('all internal links, assets and heading anchors resolve in the static build
         );
       }
     }
+  }
+});
+
+test('ten research notes replace retired pages without exposing source material or fixtures', () => {
+  const expected = [
+    'actobs',
+    'blackwell-confidential-computing',
+    'chronicle',
+    'collapse',
+    'evirca',
+    'farsight',
+    'jaz',
+    'stellar-colosseum',
+    'structured-but-fragile',
+    'tee-attestation-reproducibility',
+  ];
+  const pages = readdirSync(join(root, 'notes')).filter((name) =>
+    statSync(join(root, 'notes', name)).isDirectory(),
+  );
+  assert.deepEqual(pages.sort(), expected.sort());
+  for (const slug of expected) {
+    const html = readFileSync(join(root, 'notes', slug, 'index.html'), 'utf8');
+    assert.match(html, /class="paper-info"/);
+    assert.match(html, /https:\/\/arxiv\.org\/abs\/\d+\.\d+v\d+/);
+  }
+  for (const path of files(root)) {
+    assert.doesNotMatch(path, /(?:AGENT|daily paper digest|__test)(?:\/|$)/);
+    if (!path.endsWith('.html') && !path.endsWith('.xml')) continue;
+    assert.doesNotMatch(
+      readFileSync(path, 'utf8'),
+      /\/notes\/(?:gradient-descent|optee-from-zero-01)\//,
+    );
   }
 });

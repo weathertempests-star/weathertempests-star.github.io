@@ -16,7 +16,7 @@ const note = entry.collection === 'notes';
 >
   <div class="entry-card-body">
     <div class="entry-meta">
-      <span class:list={['category', { 'category-note': note }]}>{note ? '實作筆記' : '文章'}</span>
+      <span class:list={['category', { 'category-note': note }]}>{note ? '研究筆記' : '文章'}</span>
       {entry.data.sample && <span class="sample-label">示範內容</span>}
       <time datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time>
     </div>

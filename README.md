@@ -2,7 +2,7 @@
 
 未完的繁體中文創作與實驗筆記。從清楚的委託、可靠的引用到可重現的程式，探索如何和 AI 一起把想法做成作品。
 
-網站使用 Astro、TypeScript、Markdown、KaTeX 與 Pagefind，輸出靜態檔案並部署到 GitHub Pages。包含首頁、文章、實作筆記、關於、全文搜尋、RSS、sitemap 與 404；關於頁說明虛擬作者與人機共創方式。
+網站使用 Astro、TypeScript、Markdown、KaTeX 與 Pagefind，輸出靜態檔案並部署到 GitHub Pages。包含首頁、文章、研究筆記、關於、全文搜尋、RSS、sitemap 與 404；關於頁說明虛擬作者與人機共創方式。
 
 ## 本機預覽
 
@@ -26,13 +26,13 @@ npm run preview
 ## 網站內容與作者介紹
 
 - `src/content/blog/`：文章，記錄 AI 協作、寫作與創作工具中的方法和判斷。
-- `src/content/notes/`：實作筆記，提供推導、程式與可重現的小實驗。
+- `src/content/notes/`：研究筆記，以短篇論文導讀整理 AI 代理、模型訓練、AI 安全與機密運算的方法、證據及限制。
 - `src/data/profile.ts`：公開站名、署名、角色、網站描述、簡介與關注主題。
 - `/cv/`：沿用既有網址的關於頁，介紹作者與網站，不展示空白履歷。
 
 `profile.description` 同時用於預設 SEO 與 RSS；`profile.bio` 顯示於關於頁。Email 與社群連結僅填入希望公開的資訊，空值不產生聯絡入口。關於頁支援「列印 / 另存 PDF」，列印時隱藏導覽及操作按鈕。
 
-首批三篇作品分別介紹創作委託、來源核對與程式驗收。舊文章網址 `learning-in-public` 和 `gradient-descent` 保留，方便既有連結繼續使用。
+文章區保留創作委託與來源核對的內容；研究筆記區以論文導讀為主。舊版兩篇 note 已撤下，其網址回傳 404。
 
 ### 新增文章
 
@@ -70,6 +70,26 @@ sample: false
 檔名決定網址；發布後保留檔名，修改標題不會改變網址。日期只影響排序，不提供定時發布。未完成的文章設為 `draft: true`，完成查證、校閱與建置驗證後再改為 `false`。
 
 草稿在開發模式也不產生頁面。如需預覽，可暫時改為 `false`，提交前還原。公開儲存庫的原始檔仍可被讀取，`draft` 只控制網站輸出，私密素材不要放入內容目錄。
+
+### 研究筆記的論文資訊
+
+notes 沿用文章欄位，並要求 `paper` 物件；blog 不需要此物件。範例：
+
+```yaml
+paper:
+  title: 'The original paper title'
+  authors: ['Author One', 'Author Two']
+  url: 'https://arxiv.org/abs/2608.20966v1'
+  published: 2026-08-21
+  status: preprint
+  version: v1
+```
+
+`title`、非空 `authors`、有效網址 `url`、日期 `published` 和 `status` 必填。`status` 為 `preprint` 或 `published`；選填 `version` 與 `venue`。引用版本、作者及發表資訊以原論文確認結果為準。
+
+文章的 `date` 是筆記發表日；`paper.published` 是預印本首次提交日或正式論文發表日。首頁、列表及 RSS 依筆記日期排列，來源框另外顯示論文日期及閱讀版本。
+
+每篇以「Agent 系統」「模型訓練」「AI 安全」「機密運算」其中一個主題作為首個標籤，再加必要技術標籤。正文約 1,200–2,000 中文字，從問題解釋方法、證據與限制；引用放在相關敘述旁，原論文結果與編者推論應分清楚。
 
 ### 圖片、公式與引用
 

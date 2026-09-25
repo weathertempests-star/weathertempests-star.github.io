@@ -5,13 +5,14 @@ import Base from './Base.astro';
 import { entryUrl, formatDate, readingTime, type Entry } from '../lib/content';
 import Icon from '../components/Icon.astro';
 import Mermaid from '../components/Mermaid.astro';
+import PaperInfo from '../components/PaperInfo.astro';
 import { profile } from '../data/profile';
 interface Props {
   entry: Entry;
 }
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
-const label = entry.collection === 'notes' ? '實作筆記' : '文章';
+const label = entry.collection === 'notes' ? '研究筆記' : '文章';
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 ---
 
@@ -47,6 +48,7 @@ const toc = headings.filter((heading) => heading.depth === 2 || heading.depth ==
           ))}
         </div>
       </header>
+      {entry.collection === 'notes' && <PaperInfo paper={entry.data.paper} />}
       {entry.data.sample && (
         <aside class="sample-notice" data-pagefind-ignore>
           這是一篇示範內容，用來展示文章格式，並非網站作者的個人經歷或研究成果。
@@ -58,22 +60,25 @@ const toc = headings.filter((heading) => heading.depth === 2 || heading.depth ==
         </div>
         {toc.length > 0 && (
           <aside class="toc" data-pagefind-ignore>
-            <nav aria-label="文章目錄">
-              <span class="eyebrow">CONTENTS</span>
-              <h2>文章目錄</h2>
-              <ul>
-                {toc.map((heading) => (
-                  <li class:list={{ 'toc-sub': heading.depth === 3 }}>
-                    <a href={`#${heading.slug}`}>{heading.text}</a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            <details class="toc-disclosure" open>
+              <summary>文章目錄</summary>
+              <nav aria-label="文章目錄">
+                <ul>
+                  {toc.map((heading) => (
+                    <li class:list={{ 'toc-sub': heading.depth === 3 }}>
+                      <a href={`#${heading.slug}`}>{heading.text}</a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </details>
           </aside>
         )}
       </div>
       <div class="article-end" data-pagefind-ignore>
-        <span>讀到這裡，再帶走一個問題。</span>
+        <span>
+          {entry.collection === 'notes' ? '接著探索其他研究。' : '讀到這裡，再帶走一個問題。'}
+        </span>
         <a class="text-link" href={`/${entry.collection}/`}>
           更多{label} <Icon name="arrow" size={17} />
         </a>
@@ -83,3 +88,14 @@ const toc = headings.filter((heading) => heading.depth === 2 || heading.depth ==
   </div>
 </Base>
 <Mermaid />
+<script>
+  const toc = document.querySelector<HTMLDetailsElement>('.toc-disclosure');
+  if (toc) {
+    const mobile = window.matchMedia('(max-width: 760px)');
+    const update = () => {
+      toc.open = !mobile.matches;
+    };
+    update();
+    mobile.addEventListener('change', update);
+  }
+</script>

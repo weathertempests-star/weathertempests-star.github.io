@@ -8,20 +8,25 @@ interface Props {
 }
 const { collection } = Astro.props;
 const entries = await published(collection);
-const tags = [...new Set(entries.flatMap((entry) => entry.data.tags))].sort((a, b) =>
-  a.localeCompare(b, 'zh-Hant'),
+const topics = ['Agent 系統', '模型訓練', 'AI 安全', '機密運算'];
+const tags = [...new Set(entries.flatMap((entry) => entry.data.tags))].sort(
+  (a, b) =>
+    (topics.includes(a) ? topics.indexOf(a) : topics.length) -
+      (topics.includes(b) ? topics.indexOf(b) : topics.length) || a.localeCompare(b, 'zh-Hant'),
 );
 const note = collection === 'notes';
-const title = note ? '實作筆記' : '文章';
+const primaryTags = note ? tags.filter((tag) => topics.includes(tag)) : tags;
+const otherTags = note ? tags.filter((tag) => !topics.includes(tag)) : [];
+const title = note ? '研究筆記' : '文章';
 const description = note
-  ? '用程式、推導與小型實驗檢查想法。留下可以重做的步驟，也說清楚結果的邊界。'
+  ? '從一個技術問題讀進論文。整理 AI 代理、模型訓練與系統安全的研究，說清楚方法、證據，以及結論成立的條件。'
   : '關於 AI 協作、數位寫作與創作工具。從一個具體問題出發，整理值得留下的判斷。';
 ---
 
 <Base title={title} description={description}>
   <div class="container page-container">
     <header class="page-heading">
-      <div class="eyebrow">{note ? 'SMALL EXPERIMENTS' : 'ESSAYS & METHODS'}</div>
+      <div class="eyebrow">{note ? 'RESEARCH NOTES' : 'ESSAYS & METHODS'}</div>
       <h1>
         {title}
         <span class="blue">.</span>
@@ -33,11 +38,23 @@ const description = note
         <button type="button" class="tag-filter" data-tag="" aria-pressed="true">
           全部
         </button>
-        {tags.map((tag) => (
+        {primaryTags.map((tag) => (
           <button type="button" class="tag-filter" data-tag={tag} aria-pressed="false">
             {tag}
           </button>
         ))}
+        {otherTags.length > 0 && (
+          <details class="more-tags">
+            <summary>更多標籤</summary>
+            <div class="secondary-tags">
+              {otherTags.map((tag) => (
+                <button type="button" class="tag-filter" data-tag={tag} aria-pressed="false">
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </details>
+        )}
       </div>
       <p class="entry-count" aria-live="polite">
         共 <span id="result-count">{entries.length}</span> 篇{note ? '筆記' : '文章'}
@@ -70,6 +87,9 @@ const description = note
       buttons.forEach((button) =>
         button.setAttribute('aria-pressed', String(button.dataset.tag === tag)),
       );
+      const selected = buttons.find((button) => button.dataset.tag === tag);
+      const moreTags = selected?.closest<HTMLDetailsElement>('.more-tags');
+      if (moreTags) moreTags.open = true;
       document.querySelector('#result-count')!.textContent = String(count);
       (document.querySelector('#collection-empty') as HTMLElement).hidden = count !== 0;
     }

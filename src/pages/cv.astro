@@ -86,17 +86,18 @@ const openingArticle = (await published('blog')).find((entry) => entry.id === 'l
           </h3>
           <p>從具體的寫作與工具使用問題出發，談怎麼交代需求、核對資訊，以及決定何時繼續修改。</p>
           <h3>
-            <a href="/notes/">實作筆記：留下可以重做的步驟 ↗</a>
+            <a href="/notes/">研究筆記：讀懂方法與證據 ↗</a>
           </h3>
           <p>
-            用小型實驗、程式與推導檢查一個想法。除了結果，也說明前提、驗證方式與目前能支持的結論。
+            從 AI
+            代理、模型訓練與系統安全的論文出發，整理研究處理的問題、核心方法與證據，也說明結果成立的條件。
           </p>
         </section>
         <section class="cv-section">
           <div class="eyebrow">AN OPEN NOTEBOOK</div>
           <h2>從這一期開始</h2>
           <p>
-            第一期沿著一條簡單的路線前進：把任務說清楚，回頭核對依據，再確認作品真的運作。三篇文章可以接著讀，也可以從最貼近你的問題開始。
+            文章從委託與查證談創作中的判斷；研究筆記則從近期論文接續技術問題。可以先讀一篇方法文章，再依感興趣的主題探索。
           </p>
           <a class="text-link" href={openingArticle ? entryUrl(openingArticle) : '/blog/'}>
             {openingArticle ? openingArticle.data.title : '瀏覽所有文章'}{' '}
