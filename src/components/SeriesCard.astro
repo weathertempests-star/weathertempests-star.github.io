@@ -1,0 +1,27 @@
+---
+import { entryUrl, seriesUrl, type PublishedSeries } from '../lib/content';
+interface Props {
+  series: PublishedSeries;
+}
+const { series } = Astro.props;
+---
+
+<article class="series-card">
+  <div class="entry-meta">
+    <span class="category category-note">系列筆記</span>
+    <span>{series.status}</span>
+    <span>已發布 {series.chapters.length} 篇</span>
+  </div>
+  <h2>
+    <a href={seriesUrl(series.id)}>{series.title}</a>
+  </h2>
+  <p>{series.description}</p>
+  <div class="series-card-links">
+    <a class="text-link" href={seriesUrl(series.id)}>
+      查看系列目錄 →
+    </a>
+    <a class="text-link" href={entryUrl(series.chapters[0])}>
+      從第一篇開始 →
+    </a>
+  </div>
+</article>

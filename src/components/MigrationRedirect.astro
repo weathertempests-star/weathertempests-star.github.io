@@ -1,0 +1,33 @@
+---
+interface Props {
+  to: string;
+}
+const { to } = Astro.props;
+const canonical = new URL(to, Astro.site);
+---
+
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>文章已搬移 — 未完筆記</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={canonical} />
+    <meta http-equiv="refresh" content={`0;url=${to}`} />
+  </head>
+  <body>
+    <main>
+      <h1>這篇文章已移至文章專區</h1>
+      <p>
+        <a id="destination" href={to}>
+          前往文章的新位置
+        </a>
+      </p>
+    </main>
+    <script is:inline>
+      const destination = document.getElementById('destination').getAttribute('href');
+      window.location.replace(destination + window.location.search + window.location.hash);
+    </script>
+  </body>
+</html>

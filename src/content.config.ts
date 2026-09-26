@@ -1,7 +1,17 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { seriesIds } from './data/series';
 
+const paper = z.object({
+  title: z.string().trim().min(1),
+  authors: z.array(z.string().trim().min(1)).min(1),
+  url: z.url({ protocol: /^https?$/ }),
+  published: z.coerce.date(),
+  status: z.enum(['preprint', 'published']),
+  version: z.string().trim().min(1).optional(),
+  venue: z.string().trim().min(1).optional(),
+});
 const schema = z.object({
   title: z.string().trim().min(1),
   description: z.string().trim().min(1),
@@ -15,19 +25,14 @@ const schema = z.object({
 export const collections = {
   blog: defineCollection({
     loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
-    schema,
+    schema: schema.extend({ paper: paper.optional() }),
   }),
   notes: defineCollection({
     loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
     schema: schema.extend({
-      paper: z.object({
-        title: z.string().trim().min(1),
-        authors: z.array(z.string().trim().min(1)).min(1),
-        url: z.url({ protocol: /^https?$/ }),
-        published: z.coerce.date(),
-        status: z.enum(['preprint', 'published']),
-        version: z.string().trim().min(1).optional(),
-        venue: z.string().trim().min(1).optional(),
+      series: z.object({
+        id: z.enum(seriesIds),
+        order: z.number().int().positive(),
       }),
     }),
   }),

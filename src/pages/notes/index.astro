@@ -1,5 +1,34 @@
 ---
-import CollectionPage from '../../components/CollectionPage.astro';
+import Base from '../../layouts/Base.astro';
+import SeriesCard from '../../components/SeriesCard.astro';
+import { publishedSeries } from '../../lib/content';
+const series = await publishedSeries();
 ---
 
-<CollectionPage collection="notes" />
+<Base
+  title="系列筆記"
+  description="沿著同一個主題，從概念到實作逐篇深入。每個系列都有閱讀順序與已發布的章節目錄。"
+>
+  <div class="container page-container">
+    <header class="page-heading">
+      <div class="eyebrow">FOLLOW A SERIES</div>
+      <h1>
+        系列筆記<span class="blue">。</span>
+      </h1>
+      <p>把一個主題接著讀下去。從概念到實作，依照系列目錄逐篇深入，也能隨時回到需要的章節。</p>
+    </header>
+    <p class="muted">
+      {series.length} 個系列 · {series.reduce((total, item) => total + item.chapters.length, 0)}{' '}
+      篇筆記
+    </p>
+    <div class="series-grid">
+      {series.map((item) => (
+        <SeriesCard series={item} />
+      ))}
+    </div>
+    {!series.length && <p class="empty-state">第一個系列正在整理中。</p>}
+    <p class="collection-crosslink">
+      想先讀一篇獨立文章？<a href="/blog/">依主題探索文章 →</a>
+    </p>
+  </div>
+</Base>

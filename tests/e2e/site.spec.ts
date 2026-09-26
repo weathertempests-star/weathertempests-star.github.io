@@ -28,7 +28,7 @@ test('navigation, metadata, responsive layout and keyboard skip link', async ({ 
     await expect(navigation).toBeVisible();
     for (const [label, href] of [
       ['文章', '/blog/'],
-      ['研究筆記', '/notes/'],
+      ['系列筆記', '/notes/'],
       ['關於', '/cv/'],
     ]) {
       await expect(navigation.getByRole('link', { name: label, exact: true })).toHaveAttribute(

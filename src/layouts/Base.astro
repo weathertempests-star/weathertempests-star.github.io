@@ -24,7 +24,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const nav = [
   { label: '首頁', path: '/' },
   { label: '文章', path: '/blog/' },
-  { label: '研究筆記', path: '/notes/' },
+  { label: '系列筆記', path: '/notes/' },
   { label: '關於', path: '/cv/' },
 ];
 const active = (path: string) =>
@@ -107,7 +107,8 @@ const active = (path: string) =>
           <p>從一個問題開始，把想法寫清楚。</p>
         </div>
         <div class="footer-links">
-          <a href="/blog/">閱讀文章</a>
+          <a href="/blog/">探索文章</a>
+          <a href="/notes/">系列筆記</a>
           <a href="/cv/">關於未完</a>
           <a href="/rss.xml">
             <Icon name="rss" size={14} /> RSS 訂閱

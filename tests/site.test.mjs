@@ -39,9 +39,10 @@ test('static output contains required pages and search assets', () => {
   for (const path of [
     'index.html',
     'blog/index.html',
-    'blog/learning-in-public/index.html',
+    'blog/evirca/index.html',
     'notes/index.html',
-    'notes/evirca/index.html',
+    'notes/series/optee-from-zero/index.html',
+    'notes/optee-from-zero-01/index.html',
     'cv/index.html',
     'search/index.html',
     '404.html',
@@ -131,7 +132,7 @@ test('all internal links, assets and heading anchors resolve in the static build
   }
 });
 
-test('ten research notes replace retired pages without exposing source material or fixtures', () => {
+test('blog contains ten paper articles; notes contain the OP-TEE series and safe legacy redirects', () => {
   const expected = [
     'actobs',
     'blackwell-confidential-computing',
@@ -144,21 +145,43 @@ test('ten research notes replace retired pages without exposing source material 
     'structured-but-fragile',
     'tee-attestation-reproducibility',
   ];
-  const pages = readdirSync(join(root, 'notes')).filter((name) =>
-    statSync(join(root, 'notes', name)).isDirectory(),
+  const blogPages = readdirSync(join(root, 'blog')).filter((name) =>
+    statSync(join(root, 'blog', name)).isDirectory(),
   );
-  assert.deepEqual(pages.sort(), expected.sort());
+  assert.deepEqual(blogPages.sort(), expected.sort());
   for (const slug of expected) {
-    const html = readFileSync(join(root, 'notes', slug, 'index.html'), 'utf8');
+    const html = readFileSync(join(root, 'blog', slug, 'index.html'), 'utf8');
     assert.match(html, /class="paper-info"/);
     assert.match(html, /https:\/\/arxiv\.org\/abs\/\d+\.\d+v\d+/);
+  }
+  const notePages = readdirSync(join(root, 'notes')).filter((name) =>
+    statSync(join(root, 'notes', name)).isDirectory(),
+  );
+  assert.deepEqual(notePages.sort(), [...expected, 'optee-from-zero-01', 'series'].sort());
+  const series = readFileSync(join(root, 'notes/series/optee-from-zero/index.html'), 'utf8');
+  assert.match(series, /OP-TEE 從零開始/);
+  assert.match(series, /class="chapter-list"/);
+  assert.match(series, /\/notes\/optee-from-zero-01\//);
+  const chapter = readFileSync(join(root, 'notes/optee-from-zero-01/index.html'), 'utf8');
+  assert.match(chapter, /class="series-navigation"/);
+  assert.match(chapter, /aria-current="page"/);
+  for (const slug of expected) {
+    const html = readFileSync(join(root, 'notes', slug, 'index.html'), 'utf8');
+    assert.match(html, /<meta(?=[^>]*name="robots")(?=[^>]*content="noindex\b)/);
+    assert.match(html, new RegExp(`rel="canonical" href="[^"]*/blog/${slug}/"`));
+    assert.match(html, new RegExp(`http-equiv="refresh" content="[^\"]*/blog/${slug}/`));
+    assert.doesNotMatch(html, /data-pagefind-body/);
   }
   for (const path of files(root)) {
     assert.doesNotMatch(path, /(?:AGENT|daily paper digest|__test)(?:\/|$)/);
     if (!path.endsWith('.html') && !path.endsWith('.xml')) continue;
-    assert.doesNotMatch(
-      readFileSync(path, 'utf8'),
-      /\/notes\/(?:gradient-descent|optee-from-zero-01)\//,
-    );
+    assert.doesNotMatch(readFileSync(path, 'utf8'), /\/notes\/gradient-descent\//);
   }
+  const indexes = [
+    readFileSync(join(root, 'rss.xml'), 'utf8'),
+    ...files(root)
+      .filter((path) => /sitemap-\d+\.xml$/.test(path))
+      .map((path) => readFileSync(path, 'utf8')),
+  ].join('');
+  for (const slug of expected) assert.doesNotMatch(indexes, new RegExp(`/notes/${slug}/`));
 });

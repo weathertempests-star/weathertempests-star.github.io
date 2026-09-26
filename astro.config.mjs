@@ -6,6 +6,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import { resolveSite } from './src/lib/site-url.mjs';
 import remarkMermaid from './src/lib/remark-mermaid.mjs';
+import { migratedArticleSlugs } from './src/data/migrations.ts';
 
 if (existsSync('.env')) process.loadEnvFile('.env');
 
@@ -15,7 +16,13 @@ export default defineConfig({
   trailingSlash: 'always',
   integrations: [
     sitemap({
-      filter: (page) => !['/search/', '/404/', '/404.html'].includes(new URL(page).pathname),
+      filter: (page) =>
+        ![
+          '/search/',
+          '/404/',
+          '/404.html',
+          ...migratedArticleSlugs.map((slug) => `/notes/${slug}/`),
+        ].includes(new URL(page).pathname),
     }),
   ],
   markdown: {

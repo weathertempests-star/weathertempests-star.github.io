@@ -1,22 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
-import Icon from '../components/Icon.astro';
 import EntryCard from '../components/EntryCard.astro';
-import { profile } from '../data/profile';
-import { published, entryUrl, formatDate, readingTime } from '../lib/content';
-
-const [blog, notes] = await Promise.all([published('blog'), published('notes')]);
-const entries = [...blog, ...notes].sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime() || entryUrl(a).localeCompare(entryUrl(b)),
+import SeriesCard from '../components/SeriesCard.astro';
+import { published, publishedSeries } from '../lib/content';
+const [blog, series] = await Promise.all([published('blog'), publishedSeries()]);
+const topics = ['Agent 系統', '模型訓練', 'AI 安全', '機密運算'].filter((tag) =>
+  blog.some((entry) => entry.data.tags.includes(tag)),
 );
-const leadEntry = entries.find((entry) => entry.data.featured) ?? entries[0];
-const moreEntries = blog.filter((entry) => entry !== leadEntry).slice(0, 4);
-const topics = new Map<string, string>();
-for (const entry of entries) {
-  for (const tag of entry.data.tags) {
-    if (!topics.has(tag)) topics.set(tag, `/${entry.collection}/?tag=${encodeURIComponent(tag)}`);
-  }
-}
 ---
 
 <Base>
@@ -26,137 +16,83 @@ for (const entry of entries) {
         <span class="tiny-line"></span> NOTES IN PROGRESS
       </div>
       <h1 id="hero-title">
-        和 AI 一起，
+        從好奇的問題，
         <br />
-        把想法做成作品<span class="blue">。</span>
+        讀進技術裡<span class="blue">。</span>
       </h1>
       <p class="lead">
-        從一份說清楚的委託，到一段查得回來源的文字。
+        讀論文，理解方法與證據。寫筆記，把概念連到實作。
         <br />
-        記下創作的判斷，也留下可以重做的步驟。
+        選一個感興趣的領域，或沿著系列慢慢深入。
       </p>
-      <div class="author-line">
-        <span>{profile.name}的創作與實驗筆記</span>
-        <span aria-hidden="true">／</span>
-        <a href="/cv/">
-          認識作者 <Icon name="arrow" size={15} />
-        </a>
-      </div>
     </section>
-
-    <section class="home-feature" aria-labelledby="feature-heading">
+    <nav class="reading-paths" aria-label="選擇閱讀方式">
+      <a href="/blog/" class="reading-path">
+        <span class="eyebrow">EXPLORE BY TOPIC</span>
+        <h2>
+          依主題探索文章 <span aria-hidden="true">→</span>
+        </h2>
+        <p>從標籤找到感興趣的領域。每篇都能獨立閱讀，再沿著相關文章繼續探索。</p>
+        <span class="small">{blog.length} 篇文章</span>
+      </a>
+      <a href="/notes/" class="reading-path">
+        <span class="eyebrow">FOLLOW A SERIES</span>
+        <h2>
+          沿系列閱讀筆記 <span aria-hidden="true">→</span>
+        </h2>
+        <p>把同一個主題接著讀下去。依章節順序理解概念、實作方法與研究過程。</p>
+        <span class="small">{series.length} 個系列</span>
+      </a>
+    </nav>
+    <section class="home-articles section-block" aria-labelledby="articles-heading">
       <div class="section-heading">
         <div>
-          <div class="eyebrow">START HERE</div>
-          <h2 id="feature-heading">從一個問題開始</h2>
+          <div class="eyebrow">LATEST ARTICLES</div>
+          <h2 id="articles-heading">最近的文章</h2>
         </div>
-        <span class="small muted">本期主題 · 把 AI 提案變成作品</span>
+        <a class="text-link" href="/blog/">
+          所有文章 →
+        </a>
       </div>
-      {leadEntry ? (
-        <article class="feature-story">
-          <div class="feature-copy">
-            <div class="entry-meta">
-              <span class="category">{leadEntry.collection === 'notes' ? '研究筆記' : '文章'}</span>
-              {leadEntry.data.sample && <span class="sample-label">示範內容</span>}
-              <time datetime={leadEntry.data.date.toISOString()}>
-                {formatDate(leadEntry.data.date)}
-              </time>
-              <span>約 {readingTime(leadEntry.body)} 分鐘閱讀</span>
-            </div>
-            <h3>
-              <a class="entry-title" href={entryUrl(leadEntry)}>
-                {leadEntry.data.title}
-              </a>
-            </h3>
-            <p>{leadEntry.data.description}</p>
-            <a class="text-link" href={entryUrl(leadEntry)}>
-              閱讀這篇文章 <Icon name="arrow" size={18} />
-            </a>
-          </div>
-          <div class="feature-index" aria-label="本期閱讀路線">
-            <span class="eyebrow">THE MAKING OF AN IDEA</span>
-            <p>
-              從提問，
-              <br />
-              走到完成。
-            </p>
-            <ol>
-              <li>把需求說清楚</li>
-              <li>回頭核對證據</li>
-              <li>讓程式通過檢驗</li>
-            </ol>
-          </div>
-        </article>
+      <div class="home-topic-links" aria-label="文章主題">
+        {topics.map((tag) => (
+          <a href={`/blog/?tag=${encodeURIComponent(tag)}`}>
+            {tag}
+            <span aria-hidden="true"> →</span>
+          </a>
+        ))}
+      </div>
+      {blog.length ? (
+        <div class="research-grid">
+          {blog.slice(0, 3).map((entry) => (
+            <EntryCard entry={entry} />
+          ))}
+        </div>
       ) : (
-        <p class="empty-state">第一篇作品正在整理中。你可以先認識這個網站的創作方向。</p>
+        <p class="empty-state">第一篇文章正在整理中。</p>
       )}
     </section>
-
-    {moreEntries.length > 0 && (
-      <section class="home-reading section-block" aria-labelledby="reading-heading">
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow">KEEP EXPLORING</div>
-            <h2 id="reading-heading">接著讀</h2>
-          </div>
-          <a class="text-link" href="/blog/">
-            所有文章 <Icon name="arrow" size={17} />
-          </a>
+    <section class="home-series section-block" aria-labelledby="series-heading">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow">READ IN SEQUENCE</div>
+          <h2 id="series-heading">沿著系列深入</h2>
         </div>
-        <div class="featured-grid">
-          {moreEntries.map((entry) => (
-            <EntryCard entry={entry} />
-          ))}
-        </div>
-      </section>
-    )}
-
-    {notes.length > 0 && (
-      <section class="home-research section-block" aria-labelledby="research-heading">
-        <div class="section-heading">
-          <div>
-            <div class="eyebrow">RESEARCH NOTES</div>
-            <h2 id="research-heading">讀進研究裡</h2>
-          </div>
-          <a class="text-link" href="/notes/">
-            所有研究筆記 <Icon name="arrow" size={17} />
-          </a>
-        </div>
-        <p class="section-description">從 AI 代理到機密運算，理解方法，也檢查證據能支持多遠。</p>
-        <div class="research-grid">
-          {notes.slice(0, 3).map((entry) => (
-            <EntryCard entry={entry} />
-          ))}
-        </div>
-      </section>
-    )}
-
-    <div class="home-bottom">
-      <section class="topic-section" aria-labelledby="topics-heading">
-        <div class="eyebrow">QUESTIONS WORTH KEEPING</div>
-        <h2 id="topics-heading">追問的方向</h2>
-        <p>寫作、工具與小型實驗之間，總有值得再走一步的地方。</p>
-        <div class="topic-list">
-          {[...topics].slice(0, 8).map(([tag, url]) => (
-            <a href={url}>
-              {tag} <Icon name="arrow" size={15} />
-            </a>
-          ))}
-        </div>
-      </section>
-      <aside class="about-card">
-        <span class="eyebrow">A NOTE FROM THE AUTHOR</span>
-        <h2>我是{profile.name}。</h2>
-        <p>這裡收集創作中需要停下來想一想的時刻：怎麼提問、憑什麼相信，以及怎樣才算完成。</p>
-        <a class="text-link" href="/cv/">
-          關於未完筆記 <Icon name="arrow" size={17} />
+        <a class="text-link" href="/notes/">
+          所有系列 →
         </a>
-        <div class="about-rule"></div>
-        <p class="small muted">用你習慣的 RSS 閱讀器，追蹤新文章。</p>
-        <a class="text-link" href="/rss.xml">
-          <Icon name="rss" size={16} /> RSS 訂閱
-        </a>
-      </aside>
+      </div>
+      <div class="series-grid">
+        {series.map((item) => (
+          <SeriesCard series={item} />
+        ))}
+      </div>
+      {!series.length && <p class="empty-state">第一個系列正在整理中。</p>}
+    </section>
+    <div class="home-closing">
+      <p>未完筆記，由人與 AI 共同整理的技術閱讀與學習紀錄。</p>
+      <a href="/cv/">認識未完 →</a>
+      <a href="/rss.xml">RSS 訂閱 →</a>
     </div>
   </div>
 </Base>

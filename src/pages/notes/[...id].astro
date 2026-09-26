@@ -1,13 +1,25 @@
 ---
 import Article from '../../layouts/Article.astro';
-import { published } from '../../lib/content';
+import MigrationRedirect from '../../components/MigrationRedirect.astro';
+import { published, entryUrl, type Entry } from '../../lib/content';
+import { migratedArticleSlugs } from '../../data/migrations';
 export async function getStaticPaths() {
-  return (await published('notes')).map((entry) => ({
-    params: { id: entry.id },
-    props: { entry },
-  }));
+  const [notes, blog] = await Promise.all([published('notes'), published('blog')]);
+  return [
+    ...notes.map((entry) => ({ params: { id: entry.id }, props: { entry } })),
+    ...blog
+      .filter((entry) => migratedArticleSlugs.includes(entry.id))
+      .map((entry) => ({
+        params: { id: entry.id },
+        props: { entry, redirectTo: entryUrl(entry) },
+      })),
+  ];
 }
-const { entry } = Astro.props;
+interface Props {
+  entry: Entry;
+  redirectTo?: string;
+}
+const { entry, redirectTo } = Astro.props;
 ---
 
-<Article entry={entry} />
+{redirectTo ? <MigrationRedirect to={redirectTo} /> : <Article entry={entry} />}

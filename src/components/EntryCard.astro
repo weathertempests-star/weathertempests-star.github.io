@@ -16,7 +16,7 @@ const note = entry.collection === 'notes';
 >
   <div class="entry-card-body">
     <div class="entry-meta">
-      <span class:list={['category', { 'category-note': note }]}>{note ? '研究筆記' : '文章'}</span>
+      <span class:list={['category', { 'category-note': note }]}>{note ? '系列筆記' : '文章'}</span>
       {entry.data.sample && <span class="sample-label">示範內容</span>}
       <time datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time>
     </div>
@@ -28,9 +28,11 @@ const note = entry.collection === 'notes';
     <p>{entry.data.description}</p>
     <div class="entry-card-bottom">
       <div class="tags">
-        {entry.data.tags.slice(0, 3).map((tag) => (
-          <span>{tag}</span>
-        ))}
+        {entry.data.tags
+          .slice(0, 3)
+          .map((tag) =>
+            note ? <span>{tag}</span> : <a href={`/blog/?tag=${encodeURIComponent(tag)}`}>{tag}</a>,
+          )}
       </div>
       <span class="read-time">
         約 {readingTime(entry.body)} 分鐘 <Icon name="arrow" size={17} />

@@ -1,0 +1,56 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { publishedSeries, entryUrl, readingTime, type PublishedSeries } from '../../../lib/content';
+export async function getStaticPaths() {
+  return (await publishedSeries()).map((series) => ({
+    params: { id: series.id },
+    props: { series },
+  }));
+}
+interface Props {
+  series: PublishedSeries;
+}
+const { series } = Astro.props;
+---
+
+<Base title={series.title} description={series.description}>
+  <div class="container page-container series-page">
+    <a class="back-link" href="/notes/">
+      ← 所有系列筆記
+    </a>
+    <header class="page-heading">
+      <div class="eyebrow">SERIES</div>
+      <h1>{series.title}</h1>
+      <p>{series.description}</p>
+    </header>
+    <div class="series-overview">
+      <p>
+        已發布 {series.chapters.length} 篇 · 約{' '}
+        {series.chapters.reduce((total, chapter) => total + readingTime(chapter.body), 0)} 分鐘閱讀
+      </p>
+      <a class="button primary" href={entryUrl(series.chapters[0])}>
+        從第一篇開始 →
+      </a>
+    </div>
+    <h2>系列目錄</h2>
+    <ol class="chapter-list">
+      {series.chapters.map((entry) => (
+        <li>
+          <span class="chapter-number">{String(entry.data.series.order).padStart(2, '0')}</span>
+          <div>
+            <h3>
+              <a href={entryUrl(entry)}>{entry.data.title}</a>
+            </h3>
+            <p>{entry.data.description}</p>
+            <span class="muted small">約 {readingTime(entry.body)} 分鐘閱讀</span>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <p class="muted">這裡列出已發布的篇章，後續內容會在完成整理後加入。</p>
+    <p class="collection-crosslink">
+      <a href="/notes/">← 返回所有系列</a>
+      <a href="/blog/">探索其他領域文章 →</a>
+    </p>
+  </div>
+</Base>

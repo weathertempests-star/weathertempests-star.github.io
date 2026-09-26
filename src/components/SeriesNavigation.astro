@@ -1,0 +1,33 @@
+---
+import { entryUrl, seriesUrl, type PublishedSeries } from '../lib/content';
+interface Props {
+  series: PublishedSeries;
+  currentId: string;
+}
+const { series, currentId } = Astro.props;
+const current = series.chapters.find((entry) => entry.id === currentId)!;
+---
+
+<aside class="series-navigation" aria-label="系列導覽" data-pagefind-ignore>
+  <div>
+    <span class="eyebrow">READING THIS SERIES</span>
+    <a class="series-name" href={seriesUrl(series.id)}>
+      {series.title}
+    </a>
+  </div>
+  <p>
+    第 {current.data.series.order} 篇 · 已發布 {series.chapters.length} 篇
+  </p>
+  <details>
+    <summary>查看系列篇章</summary>
+    <ol>
+      {series.chapters.map((chapter) => (
+        <li>
+          <a href={entryUrl(chapter)} aria-current={chapter.id === currentId ? 'page' : undefined}>
+            {String(chapter.data.series.order).padStart(2, '0')} · {chapter.data.title}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </details>
+</aside>

@@ -26,7 +26,7 @@ export async function readingFixture(diagrams = true) {
         .join('\n\n')
     : '$$\nx^2 + y^2 = z^2\n$$\n\n```js\nconst answer = 42;\n```';
   const { code } = await processor.render(markdown);
-  const shell = readFileSync('dist/blog/learning-in-public/index.html', 'utf8');
+  const shell = readFileSync('dist/blog/evirca/index.html', 'utf8');
   const article = /<article\b[^>]*data-pagefind-body[^>]*>[\s\S]*?<\/article>/;
   if (!article.test(shell)) throw new Error('Built article layout is missing');
   return shell.replace(article, () => `<article><div class="prose">${code}</div></article>`);
