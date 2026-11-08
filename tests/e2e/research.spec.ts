@@ -1,24 +1,14 @@
 import { expect, test } from '@playwright/test';
+import { publishedBlogSlugs } from '../fixtures/blog.mjs';
 
-const papers = [
-  'actobs',
-  'blackwell-confidential-computing',
-  'chronicle',
-  'collapse',
-  'evirca',
-  'farsight',
-  'jaz',
-  'stellar-colosseum',
-  'structured-but-fragile',
-  'tee-attestation-reproducibility',
-];
+const papers = publishedBlogSlugs;
 
-test('blog topics filter ten papers, preserve history, and restore secondary tags', async ({
+test('blog topics filter all papers, preserve history, and restore secondary tags', async ({
   page,
 }) => {
   await page.goto('/blog/');
   await expect(page.locator('h1')).toContainText('文章');
-  await expect(page.locator('.entry-card')).toHaveCount(10);
+  await expect(page.locator('.entry-card')).toHaveCount(papers.length);
   for (const tag of ['Agent 系統', '模型訓練', 'AI 安全', '機密運算']) {
     await page.getByRole('button', { name: tag, exact: true }).click();
     expect(new URL(page.url()).searchParams.get('tag')).toBe(tag);
@@ -34,14 +24,14 @@ test('blog topics filter ten papers, preserve history, and restore secondary tag
     'true',
   );
   await page.getByRole('button', { name: '全部', exact: true }).click();
-  await expect(page.locator('.entry-card:visible')).toHaveCount(10);
+  await expect(page.locator('.entry-card:visible')).toHaveCount(papers.length);
   await page.goBack();
   await expect(page.getByRole('button', { name: '機密運算', exact: true })).toHaveAttribute(
     'aria-pressed',
     'true',
   );
   await page.goto('/blog/?tag=unknown-tag');
-  await expect(page.locator('.entry-card:visible')).toHaveCount(10);
+  await expect(page.locator('.entry-card:visible')).toHaveCount(papers.length);
   await expect(page.locator('.secondary-tags')).toBeHidden();
   await page.locator('.more-tags summary').click();
   await page.getByRole('button', { name: '根因分析', exact: true }).click();
@@ -126,7 +116,7 @@ test('articles, series navigation, and legacy redirects remain readable without 
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('/blog/');
-  await expect(page.locator('.entry-title')).toHaveCount(10);
+  await expect(page.locator('.entry-title')).toHaveCount(papers.length);
   await expect(page.locator('.tag-filters')).toBeHidden();
   await page.locator('.entry-title').first().click();
   await expect(page.locator('.paper-source-link')).toBeVisible();

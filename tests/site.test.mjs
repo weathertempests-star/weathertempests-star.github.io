@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { resolveSite } from '../src/lib/site-url.mjs';
+import { legacyPaperSlugs, publishedBlogSlugs } from './fixtures/blog.mjs';
 
 test('deployment uses the real personal Pages origin and rejects project repositories', () => {
   assert.equal(resolveSite({}), 'http://localhost:4321');
@@ -132,24 +133,13 @@ test('all internal links, assets and heading anchors resolve in the static build
   }
 });
 
-test('blog contains ten paper articles; notes contain the OP-TEE series and safe legacy redirects', () => {
-  const expected = [
-    'actobs',
-    'blackwell-confidential-computing',
-    'chronicle',
-    'collapse',
-    'evirca',
-    'farsight',
-    'jaz',
-    'stellar-colosseum',
-    'structured-but-fragile',
-    'tee-attestation-reproducibility',
-  ];
+test('blog contains all published papers; notes contain the OP-TEE series and safe legacy redirects', () => {
+  const expected = legacyPaperSlugs;
   const blogPages = readdirSync(join(root, 'blog')).filter((name) =>
     statSync(join(root, 'blog', name)).isDirectory(),
   );
-  assert.deepEqual(blogPages.sort(), expected.sort());
-  for (const slug of expected) {
+  assert.deepEqual(blogPages.toSorted(), publishedBlogSlugs.toSorted());
+  for (const slug of publishedBlogSlugs) {
     const html = readFileSync(join(root, 'blog', slug, 'index.html'), 'utf8');
     assert.match(html, /class="paper-info"/);
     assert.match(html, /https:\/\/arxiv\.org\/abs\/\d+\.\d+v\d+/);
