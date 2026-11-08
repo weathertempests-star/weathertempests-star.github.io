@@ -11,7 +11,7 @@ paper:
   authors: ["Annika Wilde", "Marco Gutfleisch", "Felix Reichmann", "Anirban Chakraborty", "Yuval Yarom", "M. Angela Sasse", "Ghassan Karame"]
   url: "https://arxiv.org/abs/2609.11411v1"
   published: 2026-09-10
-  status: preprint
+  status: published
   version: v1
 ---
 
@@ -77,5 +77,6 @@ flowchart TB
 
 ## 參考資料
 
+- [arXiv 作者註記](https://arxiv.org/abs/2609.11411)標示將刊於 ACM CCS 2026 論文集；本文解讀的是 v1 版本。
 - [論文全文："They don't care about this": A Systematic Study of TEE Build Reproducibility in the Wild（arXiv v1）](https://arxiv.org/html/2609.11411v1)
 - [arXiv 摘要、作者與版本紀錄](https://arxiv.org/abs/2609.11411v1)

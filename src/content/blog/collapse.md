@@ -11,7 +11,7 @@ paper:
   authors: ["Hanyi Zhou", "Chenyang Li", "Yuanzhe Pang", "Ke Xu", "Mingwei Xu", "Zhuotao Liu"]
   url: "https://arxiv.org/abs/2609.10117v2"
   published: 2026-09-09
-  status: preprint
+  status: published
   version: v2
 ---
 
@@ -69,5 +69,6 @@ Collapse 利用多次金鑰更新留下的不同觀測，把變動的欄序對�
 
 ## 參考資料
 
+- [arXiv 作者註記](https://arxiv.org/abs/2609.10117)標示已獲 ACM CCS 2026 接收；本文解讀的是 v2 版本。
 - Hanyi Zhou 等，[*Understanding the Security Boundary of Obfuscation-based On-Device LLM Protection*，arXiv v2 全文](https://arxiv.org/html/2609.10117v2)。
 - [arXiv 論文頁與版本紀錄](https://arxiv.org/abs/2609.10117)，2026 年 9 月 9 日首次提交、9 月 17 日更新至 v2。
